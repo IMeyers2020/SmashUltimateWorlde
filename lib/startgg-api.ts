@@ -114,6 +114,37 @@ query TournamentsByState($page: Int!, $after: Timestamp!) {
 }
 `
 
+const GET_SETS_WITH_CHARACTERS = gql`
+  query GetPlayerCharacterSets($id: ID!) {
+    player(id: $id) {
+      id
+      gamerTag
+			sets {
+        pageInfo {
+          total
+        },
+        nodes {
+          games {
+            selections {
+              character {
+                name
+              }
+              entrant {
+                id
+                participants {
+                  player {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export const getRegion = (standings: StartGGStanding[]) => {
   const regionsDict: Record<string, number> = {}
   standings.forEach(s => {
@@ -145,7 +176,6 @@ export async function searchPlayers(query: string): Promise<Player[]> {
       query: SEARCH_PLAYERS_QUERY,
       variables: { query },
     })
-
 
     const players = data.players.nodes.map((player: StartGGPlayer) => {
       // Get additional player details from our database or use defaults
@@ -182,6 +212,56 @@ export async function getSetCountForPlayer(id: number): Promise<number | null> {
   }
 }
 
+export async function getMainSecondaryFromDict(dict: Record<string, number>): Promise<{main: string, secondary: string}> {
+  let returnMain: string = "None"
+  let returnSecondary: string = "None"
+  let currMax: number = 0;
+
+  Object.entries(dict).forEach(x => {
+    if(x[1] > currMax) {
+      currMax = x[1];
+      returnSecondary = returnMain
+      returnMain = x[0]
+    }
+  })
+  return {
+    main: returnMain,
+    secondary: returnSecondary
+  };
+}
+
+export async function getMainAndSecondaryForPlayer(id: number): Promise<{main: string, secondary: string} | null> {
+  try {
+    const client = getServerApolloClient()
+    const { data } = await client.query({
+      query: GET_SETS_WITH_CHARACTERS,
+      variables: { id },
+    })
+
+    const characterDict: Record<string, number> = {}
+    data.player.sets.nodes?.forEach(x => {
+      x.games?.forEach(y => {
+        const currPlayer = y.selections.find(z => z.entrant.participants[0].player.id == id)
+
+        if(characterDict[currPlayer.character.name]) {
+          characterDict[currPlayer.character.name]++
+        } else {
+          characterDict[currPlayer.character.name] = 1;
+        }
+      })
+    })
+
+    const mainAndSecondary = await getMainSecondaryFromDict(characterDict)
+    return {
+      main: mainAndSecondary.main,
+      secondary: mainAndSecondary.secondary
+    }
+  } catch (error) {
+    console.error("Error fetching player:", error)
+    return null
+  }
+}
+
 export async function getPlayerById(id: number): Promise<Player | null> {
   try {
     const client = getServerApolloClient()
@@ -196,11 +276,13 @@ export async function getPlayerById(id: number): Promise<Player | null> {
       return null
     }
 
+    const { main, secondary } = await getMainAndSecondaryForPlayer(+player.id) ?? { main: "None", secondary: "None"};
+
     return {
       id: player.id,
       gamerTag: player.gamerTag,
-      mainCharacter: "Unknown",
-      secondaryCharacter: "Unknown",
+      mainCharacter: main,
+      secondaryCharacter: secondary,
       averagePlacement: player.recentStandings.reduce((prev: number, curr: StartGGStanding) => prev += curr.placement, 0) / player.recentStandings.length,
       numSetsPlayed: await getSetCountForPlayer(+player.id) ?? -1,
       region: getRegion(player.recentStandings)

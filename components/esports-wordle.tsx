@@ -1,12 +1,10 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { searchPlayers } from "@/lib/startgg-api"
+import { getPlayerById, searchPlayers } from "@/lib/startgg-api"
 import type { Player, TournamentEntrant } from "@/lib/types"
 import PlayerGuessResult from "./player-guess-result"
 import PlayerSuggestions from "./player-suggestions"
@@ -25,33 +23,6 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
   const [allEntrants, setAllEntrants] = useState<TournamentEntrant[]>([])
   const [isLoadingEntrants, setIsLoadingEntrants] = useState(true)
 
-  // Use Apollo Client hooks to fetch tournament data
-  const { data: iaTournaments, loading: iaLoading } = useTournamentsByState("IA")
-
-  // Combine all tournament data
-  useEffect(() => {
-    const entrants: TournamentEntrant[] = [
-      ...extractEntrantsFromTournaments(iaTournaments)
-    ]
-
-    // Remove duplicates
-    const uniqueEntrants = entrants.filter(
-      (entrant, index, self) => index === self.findIndex((e) => e.id === entrant.id),
-    )
-
-    setAllEntrants(uniqueEntrants)
-    setIsLoadingEntrants(iaLoading)
-
-  }, [iaTournaments, iaLoading])
-
-  // Local search function
-  const searchLocalEntrants = (query: string): TournamentEntrant[] => {
-    if (!query || query.length < 2) return []
-
-    const lowerQuery = query.toLowerCase()
-    return allEntrants.filter((entrant) => entrant.gamerTag.toLowerCase().includes(lowerQuery)).slice(0, 10) // Limit to 10 results
-  }
-
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setGuessInput(value)
@@ -62,28 +33,8 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
 
       try {
         // First try local search
-        const localResults = searchLocalEntrants(value)
-
-        if (localResults.length > 0) {
-          // Convert entrants to player format for display
-          const localPlayers: Player[] = localResults.map((entrant) => ({
-            id: entrant.id,
-            gamerTag: entrant.gamerTag,
-            mainCharacter: "Unknown",
-            secondaryCharacter: "None",
-            averageLocalPlacement: 5,
-            averageRegionalThreat: 5,
-            timeCompeting: 3,
-            region: "Unknown",
-            tournamentCount: 10,
-          }))
-
-          setSuggestions(localPlayers)
-        } else {
-          // Fall back to API search if no local results
-          const players = await searchPlayers(value)
-          setSuggestions(players)
-        }
+        const localResults = await searchPlayers(value);
+        setSuggestions(localResults)
       } catch (error) {
         console.error("Error searching players:", error)
         toast({
@@ -136,10 +87,9 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
     if (!selectedPlayer.mainCharacter || selectedPlayer.mainCharacter === "Unknown") {
       try {
         setIsSearching(true)
-        const players = await searchPlayers(selectedPlayer.gamerTag)
-        const matchedPlayer = players.find((p) => p.id === selectedPlayer.id)
-        if (matchedPlayer) {
-          completePlayer = matchedPlayer
+        const player = await getPlayerById(+selectedPlayer.id)
+        if (player) {
+          completePlayer = player
         }
       } catch (error) {
         console.error("Error fetching complete player data:", error)

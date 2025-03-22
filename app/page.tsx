@@ -5,7 +5,8 @@ import { getDailyPlayer } from "@/lib/player-selection"
 export default async function Home() {
   // Get the player of the day on the server
   const dailyPlayer = await getDailyPlayer()
-  console.log(dailyPlayer)
+
+  if(!dailyPlayer) return;
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:p-24">
