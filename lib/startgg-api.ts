@@ -1,13 +1,14 @@
 "use server"
 
-import type { Player, StartGGPlayer, TournamentEntrant } from "./types"
+import type { Player, StartGGPlayer, StartGGStanding, TournamentEntrant } from "./types"
 import { getServerApolloClient } from "./apollo-server"
 import { gql } from "@apollo/client"
+import { DateTime } from "luxon";
 
 // GraphQL queries
 const SEARCH_PLAYERS_QUERY = gql`
-  query SearchPlayers($query: String!) {
-    player(query: $query, first: 10) {
+  query SearchPlayers {
+    player {
       nodes {
         id
         gamerTag
@@ -39,38 +40,68 @@ const GET_PLAYER_BY_ID_QUERY = gql`
           state
         }
       }
+      recentStandings(videogameId: 1386, limit: 20) {
+        placement,
+        metadata,
+        container {
+          ... on Event {
+            numEntrants
+            tournament {
+              city
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+const GET_SETS_PLAYER = gql`
+  query GetPlayerSets($id: ID!) {
+    player(id: $id) {
+      id
+      gamerTag
+			sets {
+        pageInfo {
+          total
+        }
+      }
     }
   }
 `
 
 const GET_TOURNAMENTS_QUERY = gql`
-  query TournamentsByState($page: Int!) {
-    tournaments(query: {
-      page: $page
-      perPage: 10
-      filter: {
-        addrState: "IA"
-      }
-    }) {
-      pageInfo {
-        total
-        totalPages
-      }
-      nodes {
+query TournamentsByState($page: Int!, $after: Timestamp!) {
+  tournaments(query: {
+    page: $page
+    perPage: 25
+    filter: {
+      addrState: "IA",
+      afterDate: $after
+    }
+  }) {
+    pageInfo {
+      total
+      totalPages
+    }
+    nodes {
+      id
+      name
+      addrState
+      events(filter: {videogameId: 1386}) {
         id
         name
-        addrState
-        events(filter: {videogameId: 1386}) {
-          id
-          name
-          entrants(query: { page: 1, perPage: 25 }) {
-            pageInfo {
-              total
-              totalPages
-            }
-            nodes {
+        entrants(query: { page: 1, perPage: 25 }) {
+          pageInfo {
+            total
+            totalPages
+          }
+          nodes {
+            id
+            participants {
               id
-              participants {
+              gamerTag
+              player {
                 id
                 gamerTag
               }
@@ -80,51 +111,31 @@ const GET_TOURNAMENTS_QUERY = gql`
       }
     }
   }
+}
 `
 
-// Sample player data to augment the StartGG API data
-const playerDetails: Record<string, Partial<Player>> = {
-  // These would be populated with real data from your research
-  // This is just sample data for demonstration
-  "1": {
-    mainCharacter: "Fox",
-    secondaryCharacter: "Falco",
-    averageLocalPlacement: 1.2,
-    averageRegionalThreat: 9.5,
-    timeCompeting: 10,
-    region: "East Coast",
-    tournamentCount: 45,
-  },
-  "2": {
-    mainCharacter: "Marth",
-    secondaryCharacter: "Roy",
-    averageLocalPlacement: 2.5,
-    averageRegionalThreat: 7.8,
-    timeCompeting: 8,
-    region: "West Coast",
-    tournamentCount: 32,
-  },
-  "3": {
-    mainCharacter: "Jigglypuff",
-    secondaryCharacter: "Peach",
-    averageLocalPlacement: 1.5,
-    averageRegionalThreat: 9.2,
-    timeCompeting: 12,
-    region: "Europe",
-    tournamentCount: 67,
-  },
-  // Add more player details as needed
-}
+export const getRegion = (standings: StartGGStanding[]) => {
+  const regionsDict: Record<string, number> = {}
+  standings.forEach(s => {
+    if(s.container.tournament.city) {
+      if(regionsDict[s.container.tournament.city]) {
+        regionsDict[s.container.tournament.city]++;
+      } else {
+        regionsDict[s.container.tournament.city] = 1;
+      }
+    }
+  })
 
-// Default values for missing player details
-const defaultPlayerDetails: Omit<Player, "id" | "gamerTag"> = {
-  mainCharacter: "Unknown",
-  secondaryCharacter: "None",
-  averageLocalPlacement: 5,
-  averageRegionalThreat: 5,
-  timeCompeting: 3,
-  region: "Unknown",
-  tournamentCount: 10,
+  let returnRegion: string = "Unknown"
+  let currMax: number = 0;
+
+  Object.entries(regionsDict).forEach(x => {
+    if(x[1] > currMax) {
+      currMax = x[1];
+      returnRegion = x[0]
+    }
+  })
+  return returnRegion;
 }
 
 export async function searchPlayers(query: string): Promise<Player[]> {
@@ -135,37 +146,18 @@ export async function searchPlayers(query: string): Promise<Player[]> {
       variables: { query },
     })
 
+
     const players = data.players.nodes.map((player: StartGGPlayer) => {
       // Get additional player details from our database or use defaults
-      const details = playerDetails[player.id] || defaultPlayerDetails
-
-      // Determine region based on location data if available
-      let region = details.region || defaultPlayerDetails.region
-      if (player.user?.location) {
-        const { country, state } = player.user.location
-        if (country === "US") {
-          if (["CA", "WA", "OR", "NV", "AZ"].includes(state || "")) {
-            region = "West Coast"
-          } else if (["NY", "NJ", "MA", "PA", "MD", "VA"].includes(state || "")) {
-            region = "East Coast"
-          } else if (["TX", "OK", "LA"].includes(state || "")) {
-            region = "South"
-          } else if (["IL", "MI", "OH", "IN"].includes(state || "")) {
-            region = "Midwest"
-          }
-        } else if (["JP"].includes(country)) {
-          region = "Japan"
-        } else if (["SE", "UK", "DE", "FR", "ES", "IT"].includes(country)) {
-          region = "Europe"
-        }
-      }
 
       return {
         id: player.id,
         gamerTag: player.gamerTag,
-        ...defaultPlayerDetails,
-        ...details,
-        region,
+        mainCharacter: "Unknown",
+        secondaryCharacter: "Unknown",
+        averagePlacement: player.recentStandings.reduce((prev, curr) => prev += curr.placement, 0) / player.recentStandings.length,
+        region: getRegion(player.recentStandings),
+        tournamentCount: player.recentStandings.length
       }
     })
 
@@ -176,7 +168,21 @@ export async function searchPlayers(query: string): Promise<Player[]> {
   }
 }
 
-export async function getPlayerById(id: string): Promise<Player | null> {
+export async function getSetCountForPlayer(id: number): Promise<number | null> {
+  try {
+    const client = getServerApolloClient()
+    const { data } = await client.query({
+      query: GET_SETS_PLAYER,
+      variables: { id },
+    })
+    return data?.player?.sets?.pageInfo?.total
+  } catch (error) {
+    console.error("Error fetching player:", error)
+    return null
+  }
+}
+
+export async function getPlayerById(id: number): Promise<Player | null> {
   try {
     const client = getServerApolloClient()
     const { data } = await client.query({
@@ -184,42 +190,20 @@ export async function getPlayerById(id: string): Promise<Player | null> {
       variables: { id },
     })
 
-    const player = data.player
+    const player: StartGGPlayer = data.player
 
     if (!player) {
       return null
     }
 
-    // Get additional player details from our database or use defaults
-    const details = playerDetails[player.id] || defaultPlayerDetails
-
-    // Determine region based on location data if available
-    let region = details.region || defaultPlayerDetails.region
-    if (player.user?.location) {
-      const { country, state } = player.user.location
-      if (country === "US") {
-        if (["CA", "WA", "OR", "NV", "AZ"].includes(state || "")) {
-          region = "West Coast"
-        } else if (["NY", "NJ", "MA", "PA", "MD", "VA"].includes(state || "")) {
-          region = "East Coast"
-        } else if (["TX", "OK", "LA"].includes(state || "")) {
-          region = "South"
-        } else if (["IL", "MI", "OH", "IN"].includes(state || "")) {
-          region = "Midwest"
-        }
-      } else if (["JP"].includes(country)) {
-        region = "Japan"
-      } else if (["SE", "UK", "DE", "FR", "ES", "IT"].includes(country)) {
-        region = "Europe"
-      }
-    }
-
     return {
       id: player.id,
       gamerTag: player.gamerTag,
-      ...defaultPlayerDetails,
-      ...details,
-      region,
+      mainCharacter: "Unknown",
+      secondaryCharacter: "Unknown",
+      averagePlacement: player.recentStandings.reduce((prev: number, curr: StartGGStanding) => prev += curr.placement, 0) / player.recentStandings.length,
+      numSetsPlayed: await getSetCountForPlayer(+player.id) ?? -1,
+      region: getRegion(player.recentStandings)
     }
   } catch (error) {
     console.error("Error fetching player:", error)
@@ -241,7 +225,8 @@ export async function fetchAllEntrants(): Promise<TournamentEntrant[]> {
       const { data } = await client.query({
         query: GET_TOURNAMENTS_QUERY,
         variables: {
-          page
+          page,
+          after: Math.floor(DateTime.now().minus({years: 1}).toSeconds())
         },
       })
 
@@ -253,11 +238,12 @@ export async function fetchAllEntrants(): Promise<TournamentEntrant[]> {
           for (const entrant of event.entrants.nodes) {
             for (const participant of entrant.participants) {
               // Add unique entrants only
-              if (!allEntrants.some((e) => e.id === participant.id)) {
+              if (!allEntrants.some((e) => e.playerId === participant.player.id)) {
                 allEntrants.push({
                   id: participant.id,
                   gamerTag: participant.gamerTag,
                   participantId: entrant.id,
+                  playerId: participant.player.id
                 })
               }
             }
@@ -270,7 +256,6 @@ export async function fetchAllEntrants(): Promise<TournamentEntrant[]> {
       page++
     }
 
-    console.log(allEntrants)
     return allEntrants
   } catch (error) {
     console.error("Error fetching all entrants:", error)

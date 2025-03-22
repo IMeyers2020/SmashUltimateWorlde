@@ -25,33 +25,37 @@ export const SEARCH_PLAYERS_QUERY = gql`
 `
 
 export const GET_TOURNAMENTS_QUERY = gql`
-  query TournamentsByState($page: Int!) {
-    tournaments(query: {
-      page: $page
-      perPage: 25
-      filter: {
-        addrState: "IA"
-      }
-    }) {
-      pageInfo {
-        total
-        totalPages
-      }
-      nodes {
+query TournamentsByState($page: Int!, $after: Timestamp!) {
+  tournaments(query: {
+    page: $page
+    perPage: 25
+    filter: {
+      addrState: "IA",
+      afterDate: $after
+    }
+  }) {
+    pageInfo {
+      total
+      totalPages
+    }
+    nodes {
+      id
+      name
+      addrState
+      events(filter: {videogameId: 1386}) {
         id
         name
-        addrState
-        events(filter: {videogameId: 1386}) {
-          id
-          name
-          entrants(query: { page: 1, perPage: 25 }) {
-            pageInfo {
-              total
-              totalPages
-            }
-            nodes {
+        entrants(query: { page: 1, perPage: 25 }) {
+          pageInfo {
+            total
+            totalPages
+          }
+          nodes {
+            id
+            participants {
               id
-              participants {
+              gamerTag
+              player {
                 id
                 gamerTag
               }
@@ -61,6 +65,7 @@ export const GET_TOURNAMENTS_QUERY = gql`
       }
     }
   }
+}
 `
 
 // Hook to fetch tournaments by state
@@ -95,6 +100,7 @@ export function extractEntrantsFromTournaments(data: any): TournamentEntrant[] {
               id: participant.id,
               gamerTag: participant.gamerTag,
               participantId: entrant.id,
+              playerId: participant.player.id
             })
           }
         }

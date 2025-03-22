@@ -3,11 +3,20 @@ export interface Player {
   gamerTag: string
   mainCharacter: string
   secondaryCharacter: string
-  averageLocalPlacement: number
-  averageRegionalThreat: number
-  timeCompeting: number
+  averagePlacement: number
+  numSetsPlayed: number
   region: string
-  tournamentCount: number // New field
+}
+
+export interface StartGGStanding {
+  placement: number,
+  metadata: any,
+  container: {
+    numEntrants: number
+    tournament: {
+      city: string
+    }
+  }
 }
 
 export interface StartGGPlayer {
@@ -22,6 +31,7 @@ export interface StartGGPlayer {
       state: string
     } | null
   } | null
+  recentStandings: StartGGStanding[]
 }
 
 // New type for tournament entrants
@@ -29,5 +39,6 @@ export interface TournamentEntrant {
   id: string
   gamerTag: string
   participantId: string
+  playerId: string
 }
 

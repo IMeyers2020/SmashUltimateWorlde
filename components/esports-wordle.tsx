@@ -14,7 +14,6 @@ import { toast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { Loader2 } from "lucide-react"
 import { useTournamentsByState, extractEntrantsFromTournaments } from "@/lib/client-api"
-import { unique } from "next/dist/build/utils"
 
 export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) {
   const [guessInput, setGuessInput] = useState("")
@@ -189,7 +188,7 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
         <CardContent className="pt-6">
           <div className="text-center mb-4">
             <p className="text-sm text-muted-foreground">
-              Guess the Esports player in 6 tries. Each guess must be a valid player name.
+              Guess the Iowa Smash player in 6 tries. Each guess must be a valid player name.
             </p>
           </div>
 
