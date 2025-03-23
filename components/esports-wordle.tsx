@@ -23,12 +23,12 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
   const [isLoadingEntrants, setIsLoadingEntrants] = useState(true)
 
   const Search = (val: string) => {
-    return allPlayers.filter(x => x.gamerTag.toLowerCase().includes(val.toLowerCase()) && PlayerIds.includes(x.playerId)) ?? []
+    return allPlayers?.filter(x => x.gamerTag.toLowerCase().includes(val.toLowerCase()) && PlayerIds.includes(x.playerId)) ?? []
   }
 
   useEffect(() => {
     fetchAllEntrants().then(x => {
-      setAllPlayers(x.filter(y => Boolean(y.gamerTag) && Boolean(y.playerId)))
+      setAllPlayers(x?.filter(y => Boolean(y.gamerTag) && Boolean(y.playerId)) ?? [])
       setIsLoadingEntrants(false)
     })
   }, [])

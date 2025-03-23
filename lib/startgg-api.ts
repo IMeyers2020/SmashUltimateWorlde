@@ -162,9 +162,9 @@ export async function getPlacements(standings: StartGGStanding[]): Promise<{ loc
     }
   }
 
-  const locals = standings.filter(x => x.container.numEntrants <= 40);
-  const monthlies = standings.filter(x => x.container.numEntrants > 40 && x.container.numEntrants <= 100);
-  const regionals = standings.filter(x => x.container.numEntrants > 100);
+  const locals = standings?.filter(x => x.container.numEntrants <= 40);
+  const monthlies = standings?.filter(x => x.container.numEntrants > 40 && x.container.numEntrants <= 100);
+  const regionals = standings?.filter(x => x.container.numEntrants > 100);
 
   const localPlacement = locals.length > 0 ? locals.reduce((prev, curr) => prev += curr.placement, 0) / locals.length : 0;
   const monthlyPlacement = monthlies.length > 0 ? monthlies.reduce((prev, curr) => prev += curr.placement, 0) / monthlies.length : 0;
