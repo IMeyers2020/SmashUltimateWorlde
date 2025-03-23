@@ -4,24 +4,32 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { getPlayerById, searchPlayers } from "@/lib/startgg-api"
+import { fetchAllEntrants, getPlayerById } from "@/lib/startgg-api"
 import type { Player, TournamentEntrant } from "@/lib/types"
 import PlayerGuessResult from "./player-guess-result"
 import PlayerSuggestions from "./player-suggestions"
 import { toast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
-import { Loader2 } from "lucide-react"
-import { useTournamentsByState, extractEntrantsFromTournaments } from "@/lib/client-api"
 
 export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) {
   const [guessInput, setGuessInput] = useState("")
   const [guesses, setGuesses] = useState<Player[]>([])
-  const [suggestions, setSuggestions] = useState<Player[]>([])
+  const [suggestions, setSuggestions] = useState<{ gamerTag: string, playerId: number}[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [gameWon, setGameWon] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
-  const [allEntrants, setAllEntrants] = useState<TournamentEntrant[]>([])
+  const [allPlayers, setAllPlayers] = useState<{ gamerTag: string, playerId: number}[]>([])
   const [isLoadingEntrants, setIsLoadingEntrants] = useState(true)
+
+  const Search = (val: string) => {
+    return allPlayers.filter(x => x.gamerTag.toLowerCase().includes(val.toLowerCase())) ?? []
+  }
+
+  useEffect(() => {
+    fetchAllEntrants().then(x => {
+      setAllPlayers(x.filter(y => Boolean(y.gamerTag) && Boolean(y.playerId)))
+    })
+  }, [])
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -33,7 +41,7 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
 
       try {
         // First try local search
-        const localResults = await searchPlayers(value);
+        const localResults = Search(value);
         setSuggestions(localResults)
       } catch (error) {
         console.error("Error searching players:", error)
@@ -60,7 +68,8 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
   const submitGuess = async () => {
     if (!guessInput.trim()) return
 
-    const selectedPlayer = suggestions.find((p) => p.gamerTag.toLowerCase() === guessInput.toLowerCase())
+    const guessString = allPlayers.find(x => x.gamerTag.toLowerCase() === guessInput.toLowerCase());
+    const selectedPlayer = await getPlayerById(guessString.playerId)
 
     if (!selectedPlayer) {
       toast({
@@ -125,14 +134,13 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
     }
   }
 
+  const playerChosen = async (pId: number) => {
+    const player = await getPlayerById(pId);
+    selectPlayer(player)
+  }
+
   return (
     <div className="w-full max-w-2xl mx-auto">
-      {isLoadingEntrants && (
-        <div className="flex justify-center items-center mb-4">
-          <Loader2 className="h-6 w-6 animate-spin mr-2" />
-          <span>Loading player database...</span>
-        </div>
-      )}
 
       <Card className="mb-6">
         <CardContent className="pt-6">
@@ -149,19 +157,20 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
               value={guessInput}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              disabled={gameWon || guesses.length >= 6 || isLoadingEntrants}
+              disabled={gameWon || guesses.length >= 6}
               className="flex-1"
             />
             <Button
+              className="cursor-pointer hover:bg-slate-100 hover-text-white"
               onClick={submitGuess}
-              disabled={!guessInput || gameWon || guesses.length >= 6 || isSearching || isLoadingEntrants}
+              disabled={!guessInput || gameWon || guesses.length >= 6 || isSearching}
             >
               Guess
             </Button>
           </div>
 
           {showSuggestions && suggestions.length > 0 && (
-            <PlayerSuggestions suggestions={suggestions} onSelect={selectPlayer} isLoading={isSearching} />
+            <PlayerSuggestions suggestions={suggestions} onSelect={playerChosen} isLoading={isSearching} />
           )}
         </CardContent>
       </Card>

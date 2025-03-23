@@ -5,27 +5,6 @@ import { getServerApolloClient } from "./apollo-server"
 import { gql } from "@apollo/client"
 import { DateTime } from "luxon";
 
-// GraphQL queries
-const SEARCH_PLAYERS_QUERY = gql`
-  query SearchPlayers {
-    player {
-      nodes {
-        id
-        gamerTag
-        user {
-          id
-          slug
-          name
-          location {
-            country
-            state
-          }
-        }
-      }
-    }
-  }
-`
-
 const GET_PLAYER_BY_ID_QUERY = gql`
   query GetPlayer($id: ID!) {
     player(id: $id) {
@@ -104,6 +83,11 @@ query TournamentsByState($page: Int!, $after: Timestamp!) {
               player {
                 id
                 gamerTag
+                sets {
+                  pageInfo {
+                    total
+                  }
+                }
               }
             }
           }
@@ -147,7 +131,7 @@ const GET_SETS_WITH_CHARACTERS = gql`
 
 export const getRegion = (standings: StartGGStanding[]) => {
   const regionsDict: Record<string, number> = {}
-  standings.forEach(s => {
+  standings?.forEach(s => {
     if(s.container.tournament.city) {
       if(regionsDict[s.container.tournament.city]) {
         regionsDict[s.container.tournament.city]++;
@@ -160,7 +144,7 @@ export const getRegion = (standings: StartGGStanding[]) => {
   let returnRegion: string = "Unknown"
   let currMax: number = 0;
 
-  Object.entries(regionsDict).forEach(x => {
+  Object.entries(regionsDict)?.forEach(x => {
     if(x[1] > currMax) {
       currMax = x[1];
       returnRegion = x[0]
@@ -169,32 +153,27 @@ export const getRegion = (standings: StartGGStanding[]) => {
   return returnRegion;
 }
 
-export async function searchPlayers(query: string): Promise<Player[]> {
-  try {
-    const client = getServerApolloClient()
-    const { data } = await client.query({
-      query: SEARCH_PLAYERS_QUERY,
-      variables: { query },
-    })
+export async function getPlacements(standings: StartGGStanding[]): Promise<{ local: number, monthly: number, regional: number }> {
+  if(!standings) {
+    return {
+      local: 0,
+      monthly: 0,
+      regional: 0,
+    }
+  }
 
-    const players = data.players.nodes.map((player: StartGGPlayer) => {
-      // Get additional player details from our database or use defaults
+  const locals = standings.filter(x => x.container.numEntrants <= 40);
+  const monthlies = standings.filter(x => x.container.numEntrants > 40 && x.container.numEntrants <= 100);
+  const regionals = standings.filter(x => x.container.numEntrants > 100);
 
-      return {
-        id: player.id,
-        gamerTag: player.gamerTag,
-        mainCharacter: "Unknown",
-        secondaryCharacter: "Unknown",
-        averagePlacement: player.recentStandings.reduce((prev, curr) => prev += curr.placement, 0) / player.recentStandings.length,
-        region: getRegion(player.recentStandings),
-        tournamentCount: player.recentStandings.length
-      }
-    })
+  const localPlacement = locals.length > 0 ? locals.reduce((prev, curr) => prev += curr.placement, 0) / locals.length : 0;
+  const monthlyPlacement = monthlies.length > 0 ? monthlies.reduce((prev, curr) => prev += curr.placement, 0) / monthlies.length : 0;
+  const regionalPlacement = regionals.length > 0 ? regionals.reduce((prev, curr) => prev += curr.placement, 0) / regionals.length : 0;
 
-    return players
-  } catch (error) {
-    console.error("Error searching players:", error)
-    throw new Error("Failed to search players")
+  return {
+    local: localPlacement,
+    monthly: monthlyPlacement,
+    regional: regionalPlacement
   }
 }
 
@@ -278,12 +257,16 @@ export async function getPlayerById(id: number): Promise<Player | null> {
 
     const { main, secondary } = await getMainAndSecondaryForPlayer(+player.id) ?? { main: "None", secondary: "None"};
 
+    const placements = await getPlacements(player.recentStandings)
+
     return {
       id: player.id,
       gamerTag: player.gamerTag,
       mainCharacter: main,
       secondaryCharacter: secondary,
-      averagePlacement: player.recentStandings.reduce((prev: number, curr: StartGGStanding) => prev += curr.placement, 0) / player.recentStandings.length,
+      averageLocalPlacement: placements.local,
+      averageMonthlyPlacement: placements.monthly,
+      averageRegionalPlacement: placements.regional,
       numSetsPlayed: await getSetCountForPlayer(+player.id) ?? -1,
       region: getRegion(player.recentStandings)
     }
@@ -293,52 +276,64 @@ export async function getPlayerById(id: number): Promise<Player | null> {
   }
 }
 
-export async function fetchAllEntrants(): Promise<TournamentEntrant[]> {
+const blacklistedIds: number[] = [
+  216617,
+  49302,
+  1695284,
+  351855,
+  918277,
+  1198128,
+  353073
+]
+
+export async function fetchAllEntrants(): Promise<{playerId: number, gamerTag: string}[]> {
   try {
     const client = getServerApolloClient()
-    const allEntrants: TournamentEntrant[] = []
+    const displayPlayers: {playerId: number, gamerTag: string}[] = [];
+    let continueLoop: boolean = true
+    let index = 1;
 
-    // Process each state with pagination
-    let page = 1
-    let hasMorePages = true
-
-    while (hasMorePages && page <= 3) {
-      // Limit to 3 pages per state to avoid excessive requests
+    while(continueLoop) {
       const { data } = await client.query({
         query: GET_TOURNAMENTS_QUERY,
-        variables: {
-          page,
-          after: Math.floor(DateTime.now().minus({years: 1}).toSeconds())
+        variables: { 
+          page: index,
+          after: Math.floor(DateTime.now().minus({months: 10}).toSeconds())
+        },
+        notifyOnNetworkStatusChange: true,
+        fetchPolicy: "network-only", // Don't use cache for this query
+        errorPolicy: "all", // Return partial data even if there are errors
+        // Add a timeout to prevent hanging queries
+        context: {
+          fetchOptions: {
+            timeout: 10000, // 10 seconds timeout
+          },
         },
       })
 
-      const tournaments = data.tournaments.nodes
+      if(!data || data?.tournaments?.nodes.length < 25) continueLoop = false;
+  
+      data?.tournaments?.nodes?.forEach(node => {
+        node.events?.forEach(event => {
+          event.entrants?.nodes?.forEach(node2 => {
+              node2.participants?.forEach(part => {
+                if(!displayPlayers.find(x => x.playerId === part.player.id)) {
+                  if(part.player.sets.pageInfo.total > 50) {
+                    displayPlayers.push({
+                      playerId: part.player.id,
+                      gamerTag: part.player.gamerTag
+                    })
+                  }
+                }
+              })
+            })
+        })
+      })
 
-      // Process each tournament
-      for (const tournament of tournaments) {
-        for (const event of tournament.events) {
-          for (const entrant of event.entrants.nodes) {
-            for (const participant of entrant.participants) {
-              // Add unique entrants only
-              if (!allEntrants.some((e) => e.playerId === participant.player.id)) {
-                allEntrants.push({
-                  id: participant.id,
-                  gamerTag: participant.gamerTag,
-                  participantId: entrant.id,
-                  playerId: participant.player.id
-                })
-              }
-            }
-          }
-        }
-      }
-
-      // Check if there are more pages
-      hasMorePages = page < data.tournaments.pageInfo.totalPages
-      page++
+      index++;
     }
-
-    return allEntrants
+    console.log(displayPlayers.map(x => x.playerId))
+    return displayPlayers
   } catch (error) {
     console.error("Error fetching all entrants:", error)
     return []

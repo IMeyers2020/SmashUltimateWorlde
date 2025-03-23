@@ -18,8 +18,6 @@ export async function getDailyPlayer(): Promise<Player | null> {
     const player = await getPlayerById(selectedPlayerId)
 
     // Fetch the player data from StartGG API
-    console.log("DAILY PLAYER: ", player)
-
     if (player) {
       return player
     }
