@@ -4,6 +4,7 @@ import type { Player, StartGGPlayer, StartGGStanding, TournamentEntrant } from "
 import { getServerApolloClient } from "./apollo-server"
 import { gql } from "@apollo/client"
 import { DateTime } from "luxon";
+import { Dispatch, SetStateAction } from "react";
 
 const GET_PLAYER_BY_ID_QUERY = gql`
   query GetPlayer($id: ID!) {
@@ -220,12 +221,19 @@ export async function getMainAndSecondaryForPlayer(id: number): Promise<{main: s
     const characterDict: Record<string, number> = {}
     data.player.sets.nodes?.forEach(x => {
       x.games?.forEach(y => {
-        const currPlayer = y.selections?.find(z => z.entrant.participants[0].player.id == id)
+        let currPlayer = y.selections?.find(z => z.entrant.participants[0].player.id == id)
 
-        if(characterDict[currPlayer.character.name]) {
-          characterDict[currPlayer.character.name]++
+        if(!currPlayer) {
+          return {
+            main: "None",
+            secondary: "None"
+          }
+        }
+
+        if(characterDict[currPlayer.character?.name]) {
+          characterDict[currPlayer.character?.name]++
         } else {
-          characterDict[currPlayer.character.name] = 1;
+          characterDict[currPlayer.character?.name] = 1;
         }
       })
     })
@@ -276,28 +284,15 @@ export async function getPlayerById(id: number): Promise<Player | null> {
   }
 }
 
-const blacklistedIds: number[] = [
-  216617,
-  49302,
-  1695284,
-  351855,
-  918277,
-  1198128,
-  353073
-]
-
-export async function fetchAllEntrants(): Promise<{playerId: number, gamerTag: string}[]> {
+export async function fetchEntrantsPage(page: number): Promise<{playerId: number, gamerTag: string}[] | null> {
     const client = getServerApolloClient()
     const displayPlayers: {playerId: number, gamerTag: string}[] = [];
-    let continueLoop: boolean = true
-    let index = 1;
 
-    while(continueLoop) {
       try {
         const { data } = await client.query({
           query: GET_TOURNAMENTS_QUERY,
           variables: { 
-            page: index,
+            page: page,
             after: Math.floor(DateTime.now().minus({months: 10}).toSeconds())
           },
           notifyOnNetworkStatusChange: true,
@@ -310,18 +305,15 @@ export async function fetchAllEntrants(): Promise<{playerId: number, gamerTag: s
         })
   
         if(data == undefined) {
-          index++;
-          continue;
+          return null;
         }
-  
-        if(data?.tournaments?.nodes.length < 25) continueLoop = false;
     
         data?.tournaments?.nodes?.forEach(node => {
           node.events?.forEach(event => {
             event.entrants?.nodes?.forEach(node2 => {
                 node2.participants?.forEach(part => {
                   if(!displayPlayers.find(x => (x.playerId === part.player.id) || (x.gamerTag === part.player.gamerTag))) {
-                    if(part.player.sets.pageInfo.total > 50) {
+                    if(part.player.sets.pageInfo.total > 200) {
                       displayPlayers.push({
                         playerId: part.player.id,
                         gamerTag: part.player.gamerTag.replace("ū", "u").replace("ë", "e")
@@ -332,21 +324,11 @@ export async function fetchAllEntrants(): Promise<{playerId: number, gamerTag: s
               })
           })
         })
-  
-        index++;
       } catch (error) {
         const message: string = error instanceof Error ? error.message : error;
         console.error("Error fetching all entrants:", message)
-
-        if(message.includes("status code 429")) {
-          return displayPlayers ?? []
-        } else {
-          index++;
-          continue;
-        }
+        return null;
       }
-    }
-    console.log(displayPlayers.map(x => x.gamerTag))
     return displayPlayers
   }
 

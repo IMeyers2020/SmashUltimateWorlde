@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { fetchAllEntrants, getPlayerById } from "@/lib/startgg-api"
+import { fetchEntrantsPage, getPlayerById } from "@/lib/startgg-api"
 import type { Player, TournamentEntrant } from "@/lib/types"
 import PlayerGuessResult from "./player-guess-result"
 import PlayerSuggestions from "./player-suggestions"
@@ -21,17 +21,39 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
   const [isSearching, setIsSearching] = useState(false)
   const [allPlayers, setAllPlayers] = useState<{ gamerTag: string, playerId: number}[]>([])
   const [isLoadingEntrants, setIsLoadingEntrants] = useState(true)
+  const [currentIndex, setCurrentIndex] = useState<number>(1);
 
   const Search = (val: string) => {
     return allPlayers?.filter(x => x.gamerTag.toLowerCase().includes(val.toLowerCase()) && PlayerIds.includes(x.playerId)) ?? []
   }
 
   useEffect(() => {
-    fetchAllEntrants().then(x => {
-      setAllPlayers(x?.filter(y => Boolean(y.gamerTag) && Boolean(y.playerId)) ?? [])
-      setIsLoadingEntrants(false)
-    })
-  }, [])
+        let displayPlayers = allPlayers;
+
+          try {
+              fetchEntrantsPage(currentIndex).then(data => {
+                if(data != null) {
+                  displayPlayers = displayPlayers.concat(data.filter(x => !(displayPlayers.find(y => (y.gamerTag === x.gamerTag || y.playerId === x.playerId)))))
+                  displayPlayers = displayPlayers.filter(x => Boolean(x.gamerTag) && Boolean(x.playerId))
+                  setAllPlayers(displayPlayers)
+                  setIsLoadingEntrants(false);
+  
+                  if(!(data.length < 24)) {
+                    setCurrentIndex(currentIndex + 1)
+                  }
+                } else {
+                  setCurrentIndex(currentIndex + 1)
+                }
+              })
+          } catch (error) {
+            const message: string = error instanceof Error ? error.message : error;
+            console.error("Error fetching all entrants:", message)
+          }
+  }, [currentIndex])
+
+  useEffect(() => {
+
+  }, [currentIndex])
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -121,7 +143,7 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
         description: `You guessed correctly! The player was ${dailyPlayer.gamerTag}.`,
         variant: "default",
       })
-    } else if (newGuesses.length >= 6) {
+    } else if (newGuesses.length >= 8) {
       toast({
         title: "Game Over",
         description: `You've used all your guesses. The player was ${dailyPlayer.gamerTag}.`,
@@ -138,7 +160,15 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
 
   const playerChosen = async (pId: number) => {
     const player = await getPlayerById(pId);
-    selectPlayer(player)
+    if(player) {
+      selectPlayer(player)
+    } else {
+      toast({
+        title: "Error",
+        description: `Failed to get the player ${player}. Try to ensure you are using their most recent tag`,
+        variant: "destructive",
+      })
+    }
   }
 
   return (
@@ -147,7 +177,7 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
         <CardContent className="pt-6">
           <div className="text-center mb-4">
             <p className="text-sm text-muted-foreground">
-              Guess the Iowa Smash player in 6 tries. Each guess must be a valid player name.
+              Guess the Iowa Smash player in 8 tries. Each guess must be a valid player name.
             </p>
           </div>
 
@@ -158,13 +188,13 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
               value={guessInput}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              disabled={gameWon || isLoadingEntrants || guesses.length >= 6}
+              disabled={gameWon || isLoadingEntrants || guesses.length >= 8}
               className="flex-1"
             />
             <Button
               className="cursor-pointer hover:bg-slate-100 hover-text-white"
               onClick={submitGuess}
-              disabled={!guessInput || gameWon || guesses.length >= 6 || isSearching || isLoadingEntrants}
+              disabled={!guessInput || gameWon || guesses.length >= 8 || isSearching || isLoadingEntrants}
             >
               Guess
             </Button>
