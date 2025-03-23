@@ -51,10 +51,6 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
           }
   }, [currentIndex])
 
-  useEffect(() => {
-
-  }, [currentIndex])
-
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setGuessInput(value)
@@ -93,6 +89,16 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
     if (!guessInput.trim()) return
 
     const guessString = allPlayers.find(x => x.gamerTag.toLowerCase() === guessInput.toLowerCase());
+
+    if (!guessString) {
+      toast({
+        title: "Invalid player",
+        description: "Please select a player from the suggestions.",
+        variant: "destructive",
+      })
+      return
+    }
+
     const selectedPlayer = await getPlayerById(guessString.playerId)
 
     if (!selectedPlayer) {
@@ -192,7 +198,7 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
               className="flex-1"
             />
             <Button
-              className="cursor-pointer hover:bg-slate-100 hover-text-white"
+              className="border rounded-lg hover:bg-slate-100 bg-slate-500 text-white hover:text-slate-600 cursor-pointer"
               onClick={submitGuess}
               disabled={!guessInput || gameWon || guesses.length >= 8 || isSearching || isLoadingEntrants}
             >
