@@ -3,8 +3,8 @@ import { ApolloClientProvider } from "@/lib/apollo-provider"
 import "./globals.css"
 
 export const metadata = {
-  title: "Esports Wordle",
-  description: "Guess the esports player of the day",
+  title: "Iowa Smash Ultimate Wordle",
+  description: "Guess the Iowa Smash Ultimate player of the day",
 }
 
 export default function RootLayout({
