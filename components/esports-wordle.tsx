@@ -10,6 +10,7 @@ import PlayerGuessResult from "./player-guess-result"
 import PlayerSuggestions from "./player-suggestions"
 import { toast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
+import { Loader2Icon } from "lucide-react"
 
 export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) {
   const [guessInput, setGuessInput] = useState("")
@@ -28,6 +29,7 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
   useEffect(() => {
     fetchAllEntrants().then(x => {
       setAllPlayers(x.filter(y => Boolean(y.gamerTag) && Boolean(y.playerId)))
+      setIsLoadingEntrants(false)
     })
   }, [])
 
@@ -141,7 +143,6 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-
       <Card className="mb-6">
         <CardContent className="pt-6">
           <div className="text-center mb-4">
@@ -153,17 +154,17 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
           <div className="flex gap-2 mb-4">
             <Input
               type="text"
-              placeholder="Enter player name"
+              placeholder={isLoadingEntrants ? "Loading Players..." : "Enter player name"}
               value={guessInput}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              disabled={gameWon || guesses.length >= 6}
+              disabled={gameWon || isLoadingEntrants || guesses.length >= 6}
               className="flex-1"
             />
             <Button
               className="cursor-pointer hover:bg-slate-100 hover-text-white"
               onClick={submitGuess}
-              disabled={!guessInput || gameWon || guesses.length >= 6 || isSearching}
+              disabled={!guessInput || gameWon || guesses.length >= 6 || isSearching || isLoadingEntrants}
             >
               Guess
             </Button>
