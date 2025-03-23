@@ -13,11 +13,11 @@ export default function PlayerGuessResult({ guess, dailyPlayer }: PlayerGuessRes
   const compareResult = {
     mainCharacter: guess.mainCharacter === dailyPlayer.mainCharacter,
     secondaryCharacter: guess.secondaryCharacter === dailyPlayer.secondaryCharacter,
-    averageLocalPlacement: compareNumericValue(guess.averageLocalPlacement, dailyPlayer.averageLocalPlacement),
-    averageRegionalThreat: compareNumericValue(guess.averageRegionalThreat, dailyPlayer.averageRegionalThreat),
-    timeCompeting: compareNumericValue(guess.timeCompeting, dailyPlayer.timeCompeting),
+    averageLocalPlacement: comparePlacementValue(guess.averageLocalPlacement, dailyPlayer.averageLocalPlacement),
+    averageMonthlyPlacement: comparePlacementValue(guess.averageMonthlyPlacement, dailyPlayer.averageMonthlyPlacement),
+    averageRegionalPlacement: comparePlacementValue(guess.averageRegionalPlacement, dailyPlayer.averageRegionalPlacement),
+    numSetsPlayed: compareNumericValue(guess.numSetsPlayed, dailyPlayer.numSetsPlayed),
     region: guess.region === dailyPlayer.region,
-    tournamentCount: compareNumericValue(guess.tournamentCount, dailyPlayer.tournamentCount), // New comparison
   }
 
   return (
@@ -51,34 +51,34 @@ export default function PlayerGuessResult({ guess, dailyPlayer }: PlayerGuessRes
             />
 
             <CategoryResult
-              label="Local Placement"
+              label="Average Local Placement (Last 20 Brackets)"
               value={formatPlacement(guess.averageLocalPlacement)}
               isCorrect={compareResult.averageLocalPlacement.exact}
               direction={compareResult.averageLocalPlacement.direction}
             />
 
             <CategoryResult
-              label="Regional Threat"
-              value={formatThreat(guess.averageRegionalThreat)}
-              isCorrect={compareResult.averageRegionalThreat.exact}
-              direction={compareResult.averageRegionalThreat.direction}
+              label="Average Monthly Placement (Last 20 Brackets)"
+              value={formatPlacement(guess.averageMonthlyPlacement)}
+              isCorrect={compareResult.averageMonthlyPlacement.exact}
+              direction={compareResult.averageMonthlyPlacement.direction}
             />
 
             <CategoryResult
-              label="Time Competing"
-              value={`${guess.timeCompeting} years`}
-              isCorrect={compareResult.timeCompeting.exact}
-              direction={compareResult.timeCompeting.direction}
+              label="Average Regional Placement (Last 20 Brackets)"
+              value={formatPlacement(guess.averageRegionalPlacement)}
+              isCorrect={compareResult.averageRegionalPlacement.exact}
+              direction={compareResult.averageRegionalPlacement.direction}
+            />
+
+            <CategoryResult
+              label="Number of Sets Played (Lifetime)"
+              value={`${guess.numSetsPlayed}`}
+              isCorrect={compareResult.numSetsPlayed.exact}
+              direction={compareResult.numSetsPlayed.direction}
             />
 
             <CategoryResult label="Region" value={guess.region} isCorrect={compareResult.region} />
-
-            <CategoryResult
-              label="Tournaments"
-              value={guess.tournamentCount.toString()}
-              isCorrect={compareResult.tournamentCount.exact}
-              direction={compareResult.tournamentCount.direction}
-            />
           </div>
         </div>
       </CardContent>
@@ -115,7 +115,7 @@ function CategoryResult({ label, value, isCorrect, direction }: CategoryResultPr
   )
 }
 
-function compareNumericValue(guessValue: number, actualValue: number) {
+function compareNumericValue(guessValue: number, actualValue: number): { exact: boolean, direction: "higher" | "lower" } {
   if (guessValue === actualValue) {
     return { exact: true, direction: null }
   } else if (guessValue < actualValue) {
@@ -125,20 +125,28 @@ function compareNumericValue(guessValue: number, actualValue: number) {
   }
 }
 
+function comparePlacementValue(guessValue: number, actualValue: number): { exact: boolean, direction: "higher" | "lower" } {
+  const guessPlacement = formatPlacement(guessValue);
+  const actualPlacement = formatPlacement(actualValue);
+  if (guessPlacement === actualPlacement) {
+    return { exact: true, direction: null }
+  } else if (guessPlacement < actualPlacement) {
+    return { exact: false, direction: "lower" }
+  } else {
+    return { exact: false, direction: "higher" }
+  }
+}
+
 function formatPlacement(value: number): string {
+  if(value == 0) return "N/A"
   if (value <= 1.5) return "1st-2nd"
   if (value <= 3) return "2nd-3rd"
   if (value <= 5) return "3rd-5th"
   if (value <= 9) return "5th-9th"
   if (value <= 13) return "9th-13th"
-  return "13th+"
-}
-
-function formatThreat(value: number): string {
-  if (value >= 9) return "Very High"
-  if (value >= 7) return "High"
-  if (value >= 5) return "Medium"
-  if (value >= 3) return "Low"
-  return "Very Low"
+  if (value <= 17) return "13th-17th"
+  if (value <= 25) return "17th-25th"
+  if (value <= 33) return "25th-33rd"
+  return "33rd+"
 }
 

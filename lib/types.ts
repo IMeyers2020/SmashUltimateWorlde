@@ -3,7 +3,9 @@ export interface Player {
   gamerTag: string
   mainCharacter: string
   secondaryCharacter: string
-  averagePlacement: number
+  averageLocalPlacement: number
+  averageMonthlyPlacement: number
+  averageRegionalPlacement: number
   numSetsPlayed: number
   region: string
 }
@@ -35,10 +37,5 @@ export interface StartGGPlayer {
 }
 
 // New type for tournament entrants
-export interface TournamentEntrant {
-  id: string
-  gamerTag: string
-  participantId: string
-  playerId: string
-}
+export interface TournamentEntrant { gamerTag: string, playerId: number}
 
