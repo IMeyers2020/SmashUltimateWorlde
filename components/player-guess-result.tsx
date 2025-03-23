@@ -115,7 +115,7 @@ function CategoryResult({ label, value, isCorrect, direction }: CategoryResultPr
   )
 }
 
-function compareNumericValue(guessValue: number, actualValue: number): { exact: boolean, direction: "higher" | "lower" } {
+function compareNumericValue(guessValue: number, actualValue: number): { exact: boolean, direction: "higher" | "lower" | null } {
   if (guessValue === actualValue) {
     return { exact: true, direction: null }
   } else if (guessValue < actualValue) {
@@ -125,7 +125,7 @@ function compareNumericValue(guessValue: number, actualValue: number): { exact: 
   }
 }
 
-function comparePlacementValue(guessValue: number, actualValue: number): { exact: boolean, direction: "higher" | "lower" } {
+function comparePlacementValue(guessValue: number, actualValue: number): { exact: boolean, direction: "higher" | "lower" | null } {
   const guessPlacement = formatPlacement(guessValue);
   const actualPlacement = formatPlacement(actualValue);
   if (guessPlacement === actualPlacement) {
