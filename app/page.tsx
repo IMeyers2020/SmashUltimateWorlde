@@ -83,14 +83,18 @@ export default function HomePage() {
         </Card> */}
 
         <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full max-w-md">
-          <Button variant="outline" size="lg" className="flex-1 gap-2">
-            <MessageSquare className="h-5 w-5" />
-            Join our Discord
-          </Button>
-          <Button variant="outline" size="lg" className="flex-1 gap-2">
+          <Link target="_blank" className="hover:bg-slate-500 hover:text-white text-slate-600 border rounded-lg cursor-pointer" href="https://discord.gg/eDKrEYk9de">
+            <Button size="lg" className="flex-1 gap-2">
+              <MessageSquare className="h-5 w-5" />
+              Join our Discord
+            </Button>
+          </Link>
+          <Link target="_blank" className="hover:bg-slate-500 hover:text-white text-slate-600 border rounded-lg cursor-pointer" href="https://x.com/IowaSSBU">
+            <Button size="lg" className="flex-1 gap-2">
             <Twitter className="h-5 w-5" />
-            Follow our Twitter
-          </Button>
+              Follow our Twitter
+            </Button>
+          </Link>
         </div>
       </div>
     </main>
