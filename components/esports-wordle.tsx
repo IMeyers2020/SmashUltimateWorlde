@@ -35,7 +35,7 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
     const value = e.target.value
     setGuessInput(value)
 
-    if (value.length > 2) {
+    if (value.length > 1) {
       setIsSearching(true)
       setShowSuggestions(true)
 
