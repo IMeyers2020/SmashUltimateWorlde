@@ -10,7 +10,7 @@ import PlayerGuessResult from "./player-guess-result"
 import PlayerSuggestions from "./player-suggestions"
 import { toast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
-import { Loader2Icon } from "lucide-react"
+import { PlayerIds } from "@/lib/player-ids"
 
 export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) {
   const [guessInput, setGuessInput] = useState("")
@@ -23,7 +23,7 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
   const [isLoadingEntrants, setIsLoadingEntrants] = useState(true)
 
   const Search = (val: string) => {
-    return allPlayers.filter(x => x.gamerTag.toLowerCase().includes(val.toLowerCase())) ?? []
+    return allPlayers.filter(x => x.gamerTag.toLowerCase().includes(val.toLowerCase()) && PlayerIds.includes(x.playerId)) ?? []
   }
 
   useEffect(() => {

@@ -287,56 +287,66 @@ const blacklistedIds: number[] = [
 ]
 
 export async function fetchAllEntrants(): Promise<{playerId: number, gamerTag: string}[]> {
-  try {
     const client = getServerApolloClient()
     const displayPlayers: {playerId: number, gamerTag: string}[] = [];
     let continueLoop: boolean = true
     let index = 1;
 
     while(continueLoop) {
-      const { data } = await client.query({
-        query: GET_TOURNAMENTS_QUERY,
-        variables: { 
-          page: index,
-          after: Math.floor(DateTime.now().minus({months: 10}).toSeconds())
-        },
-        notifyOnNetworkStatusChange: true,
-        fetchPolicy: "network-only", // Don't use cache for this query
-        errorPolicy: "all", // Return partial data even if there are errors
-        // Add a timeout to prevent hanging queries
-        context: {
-          fetchOptions: {
-            timeout: 10000, // 10 seconds timeout
+      try {
+        const { data } = await client.query({
+          query: GET_TOURNAMENTS_QUERY,
+          variables: { 
+            page: index,
+            after: Math.floor(DateTime.now().minus({months: 10}).toSeconds())
           },
-        },
-      })
-
-      if(!data || data?.tournaments?.nodes.length < 25) continueLoop = false;
-  
-      data?.tournaments?.nodes?.forEach(node => {
-        node.events?.forEach(event => {
-          event.entrants?.nodes?.forEach(node2 => {
-              node2.participants?.forEach(part => {
-                if(!displayPlayers.find(x => x.playerId === part.player.id)) {
-                  if(part.player.sets.pageInfo.total > 50) {
-                    displayPlayers.push({
-                      playerId: part.player.id,
-                      gamerTag: part.player.gamerTag
-                    })
-                  }
-                }
-              })
-            })
+          notifyOnNetworkStatusChange: true,
+          errorPolicy: "all", // Return partial data even if there are errors
+          context: {
+            fetchOptions: {
+              timeout: 10000, // 10 seconds timeout
+            },
+          },
         })
-      })
+  
+        if(data == undefined) {
+          index++;
+          continue;
+        }
+  
+        if(data?.tournaments?.nodes.length < 25) continueLoop = false;
+    
+        data?.tournaments?.nodes?.forEach(node => {
+          node.events?.forEach(event => {
+            event.entrants?.nodes?.forEach(node2 => {
+                node2.participants?.forEach(part => {
+                  if(!displayPlayers.find(x => (x.playerId === part.player.id) || (x.gamerTag === part.player.gamerTag))) {
+                    if(part.player.sets.pageInfo.total > 50) {
+                      displayPlayers.push({
+                        playerId: part.player.id,
+                        gamerTag: part.player.gamerTag.replace("ū", "u").replace("ë", "e")
+                      })
+                    }
+                  }
+                })
+              })
+          })
+        })
+  
+        index++;
+      } catch (error) {
+        const message: string = error instanceof Error ? error.message : error;
+        console.error("Error fetching all entrants:", message)
 
-      index++;
+        if(message.includes("status code 429")) {
+          return displayPlayers ?? []
+        } else {
+          index++;
+          continue;
+        }
+      }
     }
-    console.log(displayPlayers.map(x => x.playerId))
+    console.log(displayPlayers.map(x => x.gamerTag))
     return displayPlayers
-  } catch (error) {
-    console.error("Error fetching all entrants:", error)
-    return []
   }
-}
 
