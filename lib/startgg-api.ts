@@ -220,7 +220,7 @@ export async function getMainAndSecondaryForPlayer(id: number): Promise<{main: s
     const characterDict: Record<string, number> = {}
     data.player.sets.nodes?.forEach(x => {
       x.games?.forEach(y => {
-        const currPlayer = y.selections.find(z => z.entrant.participants[0].player.id == id)
+        const currPlayer = y.selections?.find(z => z.entrant.participants[0].player.id == id)
 
         if(characterDict[currPlayer.character.name]) {
           characterDict[currPlayer.character.name]++
