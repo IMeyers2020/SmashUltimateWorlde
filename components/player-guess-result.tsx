@@ -79,19 +79,25 @@ export const compareCharacterValue = (guess: Player, daily: Player): { main: Pla
   }
 }
 
-export default function PlayerGuessResult({ guess, dailyPlayer }: PlayerGuessResultProps) {
-  // Compare the guess with the daily player
-
-  const compareChars = compareCharacterValue(guess, dailyPlayer);
+export const getResults = (guess: Player, daily: Player) => {
+  const compareChars = compareCharacterValue(guess, daily);
   const compareResult = {
     mainCharacter: compareChars.main,
     secondaryCharacter: compareChars.secondary,
-    averageLocalPlacement: comparePlacementValue(guess.averageLocalPlacement, dailyPlayer.averageLocalPlacement),
-    averageMonthlyPlacement: comparePlacementValue(guess.averageMonthlyPlacement, dailyPlayer.averageMonthlyPlacement),
-    averageRegionalPlacement: comparePlacementValue(guess.averageRegionalPlacement, dailyPlayer.averageRegionalPlacement),
-    numSetsPlayed: compareNumericValue(guess.numSetsPlayed, dailyPlayer.numSetsPlayed),
-    region: guess.region === dailyPlayer.region,
+    averageLocalPlacement: comparePlacementValue(guess.averageLocalPlacement, daily.averageLocalPlacement),
+    averageMonthlyPlacement: comparePlacementValue(guess.averageMonthlyPlacement, daily.averageMonthlyPlacement),
+    averageRegionalPlacement: comparePlacementValue(guess.averageRegionalPlacement, daily.averageRegionalPlacement),
+    numSetsPlayed: compareNumericValue(guess.numSetsPlayed, daily.numSetsPlayed),
+    region: guess.region === daily.region,
   }
+
+  return compareResult;
+}
+
+export default function PlayerGuessResult({ guess, dailyPlayer }: PlayerGuessResultProps) {
+  // Compare the guess with the daily player
+
+  const compareResult = getResults(guess, dailyPlayer)
 
   return (
     <Card className="w-full">

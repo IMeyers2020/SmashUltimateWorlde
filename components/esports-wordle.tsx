@@ -6,12 +6,13 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { fetchEntrantsPage, getPlayerById } from "@/lib/startgg-api"
 import type { Player, StaticPlayerProps, TournamentEntrant } from "@/lib/types"
-import PlayerGuessResult from "./player-guess-result"
+import PlayerGuessResult, { getResults } from "./player-guess-result"
 import PlayerSuggestions from "./player-suggestions"
 import { toast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { PlayerIds } from "@/lib/player-ids"
 import { PlayerStaticValues } from "@/lib/static-players"
+import { DateTime } from "luxon"
 
 export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) {
   const [guessInput, setGuessInput] = useState("")
@@ -155,6 +156,25 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
     }
   }
 
+  const copyResultToClipboard = (guesses: Player[]) => {
+    const results = guesses.map(x => getResults(x, dailyPlayer))
+
+    const dateString = DateTime.now().toLocaleString({month: "numeric", day: "numeric"})
+
+    let returnString = `Iowa Smashdle ${dateString}\n`
+    results.forEach(x => {
+      returnString = returnString + 
+      `${x.mainCharacter.exact ? "🟩" : x.mainCharacter.matchesGame || x.mainCharacter.matchesOther ? "🟨" : "⬜"}` +
+      `${x.secondaryCharacter.exact ? "🟩" : x.secondaryCharacter.matchesGame || x.secondaryCharacter.matchesOther ? "🟨" : "⬜"}` +
+      `${x.averageLocalPlacement.exact ? "🟩" : "⬜"}` +
+      `${x.averageMonthlyPlacement.exact ? "🟩" : "⬜"}` +
+      `${x.averageRegionalPlacement.exact ? "🟩" : "⬜"}` +
+      `${x.numSetsPlayed.exact ? "🟩" : "⬜"}` +
+      `${x.region ? "🟩" : "⬜"}\n`
+    })
+    navigator.clipboard.writeText(returnString)
+  }
+
   return (
     <div className="w-full max-w-2xl mx-auto">
       <Card className="mb-6">
@@ -196,6 +216,18 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
         ) : (
           <div className="text-center p-8 text-muted-foreground">No guesses yet. Start by typing a player name.</div>
         )}
+        {
+          (gameWon || guesses.length >= 8) && (
+            <div className="flex justify-center">
+              <Button
+                onClick={() => copyResultToClipboard(guesses)}
+                className="border rounded-lg hover:bg-slate-100 bg-slate-500 text-white hover:text-slate-600 cursor-pointer"
+              >
+                Share
+              </Button>
+            </div>
+          )
+        }
       </div>
 
       <Toaster />
