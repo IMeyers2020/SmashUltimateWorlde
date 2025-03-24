@@ -151,7 +151,7 @@ function comparePlacementValue(guessValue: number, actualValue: number): { exact
 
 function formatPlacement(value: number): string {
   if(value == 0) return "N/A"
-  if (value <= 1.5) return "1st-2nd"
+  if (value <= 2) return "1st-2nd"
   if (value <= 3) return "2nd-3rd"
   if (value <= 5) return "3rd-5th"
   if (value <= 9) return "5th-9th"
