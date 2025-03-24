@@ -195,9 +195,13 @@ function CategoryResult({ label, value, isCorrect, direction, isPartial, matches
           ) : direction === "lower" ? (
             <span className="text-xs text-amber-600">↓ Lower</span>
           ) : gameDirection === "higher" ? (
-            <span className="text-xs text-amber-600">↑ Appears in a newer game</span>
+            <div className="flex text-center px-2">
+              <span className="text-xs text-amber-600">↑ First Appeared in a newer game</span>
+            </div>
           ) : gameDirection === "lower" ? (
-            <span className="text-xs text-amber-600">↓ Appears in an older game</span>
+            <div className="flex text-center px-2">
+              <span className="text-xs text-amber-600">↓ First Appeared in an older game</span>
+            </div>
           ) : isPartial ? (
             <div className="flex flex-col ml-3 justify-center">
               <div className="flex justify-center">

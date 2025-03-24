@@ -124,7 +124,7 @@ export const PlayerStaticValues: StaticPlayerProps[] =
     {
         id: "845030",
         gamerTag: "pla5ma",
-        mainCharacter: "R.O.B",
+        mainCharacter: "R.O.B.",
         secondaryCharacter: "None",
         region: "Ames"
     },
