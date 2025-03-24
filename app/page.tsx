@@ -37,7 +37,7 @@ export default function HomePage() {
         </p>
 
         <Link href="/wordle" className="w-full max-w-xs border rounded-lg hover:bg-slate-100 bg-slate-500 text-white hover:text-slate-600 cursor-pointer">
-          <Button size="lg" className="w-full text-lg py-6">
+          <Button size="lg" className="w-full text-lg py-6 cursor-pointer">
             Play Wordle
           </Button>
         </Link>
@@ -84,13 +84,13 @@ export default function HomePage() {
 
         <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full max-w-md">
           <Link target="_blank" className="hover:bg-slate-500 hover:text-white text-slate-600 border rounded-lg cursor-pointer" href="https://discord.gg/eDKrEYk9de">
-            <Button size="lg" className="flex-1 gap-2">
+            <Button size="lg" className="flex-1 gap-2 cursor-pointer">
               <MessageSquare className="h-5 w-5" />
               Join our Discord
             </Button>
           </Link>
           <Link target="_blank" className="hover:bg-slate-500 hover:text-white text-slate-600 border rounded-lg cursor-pointer" href="https://x.com/IowaSSBU">
-            <Button size="lg" className="flex-1 gap-2">
+            <Button size="lg" className="flex-1 gap-2 cursor-pointer">
             <Twitter className="h-5 w-5" />
               Follow our Twitter
             </Button>

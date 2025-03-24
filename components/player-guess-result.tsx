@@ -1,18 +1,27 @@
 import type { Player } from "@/lib/types"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, XCircle } from "lucide-react"
+import { CheckCircle, HelpCircle, XCircle } from "lucide-react"
 
 interface PlayerGuessResultProps {
   guess: Player
   dailyPlayer: Player
 }
 
+export const compareCharacterValue = (guess: Player, daily: Player): { main: "exact" | "partial" | "incorrect", secondary: "exact" | "partial" | "incorrect"} => {
+  return {
+    main: guess.mainCharacter === daily.mainCharacter ? "exact" : guess.mainCharacter === daily.secondaryCharacter ? "partial" : "incorrect",
+    secondary: guess.secondaryCharacter === daily.secondaryCharacter ? "exact" : guess.secondaryCharacter === daily.mainCharacter ? "partial" : "incorrect"
+  }
+}
+
 export default function PlayerGuessResult({ guess, dailyPlayer }: PlayerGuessResultProps) {
   // Compare the guess with the daily player
+
+  const compareChars = compareCharacterValue(guess, dailyPlayer);
   const compareResult = {
-    mainCharacter: guess.mainCharacter === dailyPlayer.mainCharacter,
-    secondaryCharacter: guess.secondaryCharacter === dailyPlayer.secondaryCharacter,
+    mainCharacter: compareChars.main,
+    secondaryCharacter: compareChars.secondary,
     averageLocalPlacement: comparePlacementValue(guess.averageLocalPlacement, dailyPlayer.averageLocalPlacement),
     averageMonthlyPlacement: comparePlacementValue(guess.averageMonthlyPlacement, dailyPlayer.averageMonthlyPlacement),
     averageRegionalPlacement: comparePlacementValue(guess.averageRegionalPlacement, dailyPlayer.averageRegionalPlacement),
@@ -41,13 +50,15 @@ export default function PlayerGuessResult({ guess, dailyPlayer }: PlayerGuessRes
             <CategoryResult
               label="Main Character"
               value={guess.mainCharacter}
-              isCorrect={compareResult.mainCharacter}
+              isCorrect={compareResult.mainCharacter === "exact"}
+              isPartial={compareResult.mainCharacter === "partial"}
             />
 
             <CategoryResult
               label="Secondary Character"
               value={guess.secondaryCharacter}
-              isCorrect={compareResult.secondaryCharacter}
+              isCorrect={compareResult.secondaryCharacter === "exact"}
+              isPartial={compareResult.secondaryCharacter === "partial"}
             />
 
             <CategoryResult
@@ -91,11 +102,12 @@ interface CategoryResultProps {
   value: string
   isCorrect: boolean
   direction?: "higher" | "lower" | null
+  isPartial?: boolean
 }
 
-function CategoryResult({ label, value, isCorrect, direction }: CategoryResultProps) {
+function CategoryResult({ label, value, isCorrect, direction, isPartial }: CategoryResultProps) {
   return (
-    <div className={`p-2 rounded-md flex flex-col ${isCorrect ? "bg-green-100 dark:bg-green-900/20" : "bg-muted"}`}>
+    <div className={`p-2 rounded-md flex flex-col ${isCorrect ? "bg-green-100 dark:bg-green-900/20" : isPartial ? "bg-amber-100 dark:bg-amber-900/20" : "bg-muted"}`}>
       <div className="text-xs text-muted-foreground">{label}</div>
       <div className="flex items-center justify-between">
         <span className="font-medium">{value}</span>
@@ -106,7 +118,7 @@ function CategoryResult({ label, value, isCorrect, direction }: CategoryResultPr
             <span className="text-xs text-amber-600">↑ Higher</span>
           ) : direction === "lower" ? (
             <span className="text-xs text-amber-600">↓ Lower</span>
-          ) : (
+          ) : isPartial ? (<HelpCircle className="h-4 w-4 text-amber-600" />) :(
             <XCircle className="h-4 w-4 text-red-600" />
           )}
         </span>
