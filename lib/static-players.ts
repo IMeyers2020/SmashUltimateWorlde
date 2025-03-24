@@ -89,7 +89,7 @@ export const PlayerStaticValues: StaticPlayerProps[] =
     {
         id: "1720138",
         gamerTag: "Phly",
-        mainCharacter: "Pirahna Plant",
+        mainCharacter: "Piranha Plant",
         secondaryCharacter: "Incineroar",
         region: "Ames"
     },
