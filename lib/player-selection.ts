@@ -8,14 +8,17 @@ import { DateTime } from "luxon";
 export async function getDailyPlayer(): Promise<Player | null> {
   try {
     // Get today's date in YYYY-MM-DD format
-    const today = DateTime.now().startOf("day").toSeconds().toString()
+    const today = new Date();
+    const seed = today.getFullYear() * 10000
+    const randomIndex = seed % PlayerIds.length;
 
-    const seed = hashString(today)
+
+    // const seed = hashString(today)
     const selectedIndex = seed % PlayerIds.length
     const selectedPlayerId = PlayerIds[selectedIndex]
 
     // Fetch the player data from StartGG API
-    const player = await getPlayerById(selectedPlayerId)
+    const player = await getPlayerById(PlayerIds[randomIndex])
 
     // Fetch the player data from StartGG API
     if (player) {

@@ -71,8 +71,6 @@ export const compareCharacterValue = (guess: Player, daily: Player): { main: Pla
     direction: secondaryDirection
   }
 
-  console.log("Val: ", secondaryMatchesGame, "GUESS: ", guessSecondaryCharacterListItem?.["first-game"], dailySecondaryCharacterListItem?.["first-game"])
-
   return {
     main: mainComparison,
     secondary: secondaryComparison
