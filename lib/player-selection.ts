@@ -3,14 +3,14 @@
 import type { Player } from "./types"
 import { getPlayerById } from "./startgg-api"
 import { PlayerIds } from "./player-ids";
+import { DateTime } from "luxon";
 
 export async function getDailyPlayer(): Promise<Player | null> {
   try {
     // Get today's date in YYYY-MM-DD format
-    const today = new Date()
-    const dateString = today.toISOString().split("T")[0]
+    const today = DateTime.now().startOf("day").toSeconds().toString()
 
-    const seed = hashString(dateString)
+    const seed = hashString(today)
     const selectedIndex = seed % PlayerIds.length
     const selectedPlayerId = PlayerIds[selectedIndex]
 
