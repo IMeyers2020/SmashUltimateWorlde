@@ -5,21 +5,12 @@ import { getServerApolloClient } from "./apollo-server"
 import { gql } from "@apollo/client"
 import { DateTime } from "luxon";
 import { Dispatch, SetStateAction } from "react";
+import { PlayerStaticValues } from "./static-players";
 
 const GET_PLAYER_BY_ID_QUERY = gql`
   query GetPlayer($id: ID!) {
     player(id: $id) {
       id
-      gamerTag
-      user {
-        id
-        slug
-        name
-        location {
-          country
-          state
-        }
-      }
       recentStandings(videogameId: 1386, limit: 20) {
         placement,
         metadata,
@@ -250,6 +241,10 @@ export async function getMainAndSecondaryForPlayer(id: number): Promise<{main: s
 }
 
 export async function getPlayerById(id: number): Promise<Player | null> {
+  const staticValues = PlayerStaticValues.find(x => +x.id === id)
+
+  if(!staticValues) return null;
+
   try {
     const client = getServerApolloClient()
     const { data } = await client.query({
@@ -263,20 +258,19 @@ export async function getPlayerById(id: number): Promise<Player | null> {
       return null
     }
 
-    const { main, secondary } = await getMainAndSecondaryForPlayer(+player.id) ?? { main: "None", secondary: "None"};
-
     const placements = await getPlacements(player.recentStandings)
+    const numSetsPlayed = await getSetCountForPlayer(+player.id) ?? -1
 
     return {
-      id: player.id,
-      gamerTag: player.gamerTag,
-      mainCharacter: main,
-      secondaryCharacter: secondary,
+      id: staticValues.id,
+      gamerTag: staticValues.gamerTag,
+      mainCharacter: staticValues.mainCharacter,
+      secondaryCharacter: staticValues.secondaryCharacter,
       averageLocalPlacement: placements.local,
       averageMonthlyPlacement: placements.monthly,
       averageRegionalPlacement: placements.regional,
-      numSetsPlayed: await getSetCountForPlayer(+player.id) ?? -1,
-      region: getRegion(player.recentStandings)
+      numSetsPlayed: numSetsPlayed,
+      region: staticValues.region
     }
   } catch (error) {
     console.error("Error fetching player:", error)

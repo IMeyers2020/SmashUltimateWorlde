@@ -1,13 +1,16 @@
-export interface Player {
+
+export interface StaticPlayerProps {
   id: string
   gamerTag: string
   mainCharacter: string
   secondaryCharacter: string
+  region: string
+}
+export type Player = StaticPlayerProps & {
   averageLocalPlacement: number
   averageMonthlyPlacement: number
   averageRegionalPlacement: number
   numSetsPlayed: number
-  region: string
 }
 
 export interface StartGGStanding {
