@@ -5,7 +5,7 @@ export const PlayerStaticValues: StaticPlayerProps[] =
     {
         id: "3010205",
         gamerTag: "Floodle",
-        mainCharacter: "King DDD",
+        mainCharacter: "King Dedede",
         secondaryCharacter: "None",
         region: "Dubuque"
     },
@@ -26,14 +26,14 @@ export const PlayerStaticValues: StaticPlayerProps[] =
     {
         id: "2285441",
         gamerTag: "KilogramHours",
-        mainCharacter: "King DDD",
+        mainCharacter: "King Dedede",
         secondaryCharacter: "None",
         region: "Dubuque"
     },
     {
         id: "966872",
         gamerTag: "BuTTered nOOdlEs",
-        mainCharacter: "King DDD",
+        mainCharacter: "King Dedede",
         secondaryCharacter: "Sephiroth",
         region: "Davenport"
     },
@@ -82,7 +82,7 @@ export const PlayerStaticValues: StaticPlayerProps[] =
     {
         id: "1610333",
         gamerTag: "hiyourded",
-        mainCharacter: "King DDD",
+        mainCharacter: "King Dedede",
         secondaryCharacter: "None",
         region: "Pella"
     },
@@ -468,7 +468,7 @@ export const PlayerStaticValues: StaticPlayerProps[] =
     {
         id: "1646119",
         gamerTag: "Minecraft Mattt 2",
-        mainCharacter: "King DDD",
+        mainCharacter: "King Dedede",
         secondaryCharacter: "Bowser",
         region: "Iowa City"
     },
