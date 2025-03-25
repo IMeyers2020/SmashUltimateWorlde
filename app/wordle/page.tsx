@@ -2,6 +2,8 @@ import { Suspense } from "react"
 import EsportsWordle from "@/components/esports-wordle"
 import { getDailyPlayer } from "@/lib/player-selection"
 
+export const revalidate = 3600;
+
 export default async function WordlePage() {
   // Get the player of the day on the server
   const dailyPlayer = await getDailyPlayer()
