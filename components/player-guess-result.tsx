@@ -43,7 +43,6 @@ export const compareCharacterValue = (guess: Player, daily: Player): { main: Pla
   const mainExact = guess.mainCharacter === daily.mainCharacter;
   const mainMatchesOther = guess.mainCharacter === daily.secondaryCharacter;
   const mainMatchesGame = guessMainCharacterListItem?.["first-game"] === dailyMainCharacterListItem?.["first-game"]
-  console.log(mainMatchesGame, guessMainCharacterListItem, dailyMainCharacterListItem, daily)
   const mainDirection = (mainMatchesGame ||
     getGameValue(guessMainCharacterListItem?.["first-game"] as GameValue) == null ||
     getGameValue(dailyMainCharacterListItem?.["first-game"] as GameValue) == null
@@ -58,7 +57,6 @@ export const compareCharacterValue = (guess: Player, daily: Player): { main: Pla
     ) ? null :
       getGameValue(guessSecondaryCharacterListItem?.["first-game"] as GameValue)! > getGameValue(dailySecondaryCharacterListItem?.["first-game"] as GameValue)! ? "lower" : "higher"
 
-      console.log(mainDirection, secondaryDirection)
   const mainComparison: PlayerGuessCharacterComparison = {
     exact: mainExact,
     matchesOther: mainMatchesOther,

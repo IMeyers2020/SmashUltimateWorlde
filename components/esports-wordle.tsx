@@ -27,6 +27,27 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
     return allPlayers?.filter(x => x.gamerTag.toLowerCase().includes(val.toLowerCase()) && PlayerStaticValues.map(y => +y.id).includes(+x.id)) ?? []
   }
 
+  useEffect(() => {
+    const reloadAtNewDay = () => {
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(24, 0, 0, 0);
+
+      const timeUntilMidnight = midnight.getTime() - now.getTime();
+
+      const timeoutId = setTimeout(() => {
+        window.location.reload();
+        reloadAtNewDay();
+      }, timeUntilMidnight);
+
+      return timeoutId;
+    };
+
+    const timeoutId = reloadAtNewDay();
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setGuessInput(value)
