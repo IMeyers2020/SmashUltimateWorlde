@@ -1,0 +1,14 @@
+name: deploy nightly
+
+on:
+  schedule:
+    - cron: '30 0 * * *'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: curl
+        uses: wei/curl@master
+        with:
+          args: ${{ secrets.VERCEL_DEPLOY_HOOK }}
