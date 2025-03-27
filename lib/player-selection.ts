@@ -8,8 +8,8 @@ import { DateTime } from "luxon";
 export async function getDailyPlayer(): Promise<Player | null> {
   try {
     // Get today's date in YYYY-MM-DD format
-    const date = new Date();
-    const index = (date.getFullYear() * date.getDate() * (date.getMonth() + 1)) % PlayerIds.length;
+    const date = DateTime.now().startOf("day").toMillis()
+    const index = date % PlayerIds.length;
 
     const selectedPlayerId = PlayerIds.at(index)
 
