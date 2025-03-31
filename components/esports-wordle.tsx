@@ -123,7 +123,7 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
     // If the player was found in local search but doesn't have complete data,
     // fetch the complete player data from the API
     let completePlayer = selectedPlayer
-    if (!selectedPlayer.mainCharacter || selectedPlayer.mainCharacter === "Unknown") {
+    if (!selectedPlayer.mainCharacter || selectedPlayer.mainCharacter === "None") {
       try {
         setIsSearching(true)
         const player = await getPlayerById(+selectedPlayer.id)
