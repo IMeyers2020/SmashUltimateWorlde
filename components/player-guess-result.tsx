@@ -35,6 +35,14 @@ const getGameValue = (val: GameValue): number | null => {
   }
 }
 
+export const capitalize = (val: string) => {
+  return val
+  .toLowerCase()
+  .split(' ')
+  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+  .join(' ');
+}
+
 export const compareCharacterValue = (guess: Player, daily: Player): { main: PlayerGuessCharacterComparison, secondary: PlayerGuessCharacterComparison} => {
   const guessMainCharacterListItem = CharacterList.find(x => x.name.toLowerCase() === guess.mainCharacter.toLowerCase());
   const guessSecondaryCharacterListItem = CharacterList.find(x => x.name.toLowerCase() === guess.secondaryCharacter.toLowerCase());
@@ -117,7 +125,7 @@ export default function PlayerGuessResult({ guess, dailyPlayer }: PlayerGuessRes
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
             <CategoryResult
               label="Main Character"
-              value={guess.mainCharacter}
+              value={capitalize(guess.mainCharacter)}
               isCorrect={compareResult.mainCharacter.exact}
               isPartial={compareResult.mainCharacter.matchesGame || compareResult.mainCharacter.matchesOther}
               matchesGame={compareResult.mainCharacter.matchesGame}
@@ -128,7 +136,7 @@ export default function PlayerGuessResult({ guess, dailyPlayer }: PlayerGuessRes
 
             <CategoryResult
               label="Secondary Character"
-              value={guess.secondaryCharacter}
+              value={capitalize(guess.secondaryCharacter)}
               isCorrect={compareResult.secondaryCharacter.exact}
               isPartial={compareResult.secondaryCharacter.matchesGame || compareResult.secondaryCharacter.matchesOther}
               matchesGame={compareResult.secondaryCharacter.matchesGame}
