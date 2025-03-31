@@ -1,9 +1,14 @@
+import { CharacterList } from "./characters"
+import { PlayerIds } from "./player-ids"
+
+type CharacterNames =  typeof CharacterList[number]["name"] | "None"
+type PlayerIdsType =  typeof PlayerIds[number]
 
 export interface StaticPlayerProps {
-  id: string
+  id: `${PlayerIdsType}`
   gamerTag: string
-  mainCharacter: string
-  secondaryCharacter: string
+  mainCharacter: CharacterNames
+  secondaryCharacter: CharacterNames
   region: string
 }
 export type Player = StaticPlayerProps & {

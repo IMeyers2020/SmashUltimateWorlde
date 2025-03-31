@@ -5,556 +5,556 @@ export const PlayerStaticValues: StaticPlayerProps[] =
     {
         id: "3010205",
         gamerTag: "Floodle",
-        mainCharacter: "King Dedede",
+        mainCharacter: "king dedede",
         secondaryCharacter: "None",
         region: "Dubuque"
     },
     {
         id: "1665644",
         gamerTag: "Axiom",
-        mainCharacter: "Ice Climbers",
+        mainCharacter: "ice climbers",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "1533290",
         gamerTag: "Jinx",
-        mainCharacter: "Toon Link",
+        mainCharacter: "toon link",
         secondaryCharacter: "None",
         region: "Cedar Rapids"
     },
     {
         id: "2285441",
         gamerTag: "KilogramHours",
-        mainCharacter: "King Dedede",
+        mainCharacter: "king dedede",
         secondaryCharacter: "None",
         region: "Dubuque"
     },
     {
         id: "966872",
         gamerTag: "BuTTered nOOdlEs",
-        mainCharacter: "King Dedede",
-        secondaryCharacter: "Sephiroth",
+        mainCharacter: "king dedede",
+        secondaryCharacter: "sephiroth",
         region: "Davenport"
     },
     {
         id: "2713078",
         gamerTag: "Crystal",
-        mainCharacter: "Olimar",
+        mainCharacter: "olimar",
         secondaryCharacter: "None",
         region: "Davenport"
     },
     {
         id: "2836408",
         gamerTag: "Viperian23",
-        mainCharacter: "MewTwo",
+        mainCharacter: "mewtwo",
         secondaryCharacter: "None",
         region: "Pella"
     },
     {
         id: "2985574",
         gamerTag: "Bluibii",
-        mainCharacter: "Bayonetta",
+        mainCharacter: "bayonetta",
         secondaryCharacter: "None",
         region: "Davenport"
     },
     {
         id: "541191",
         gamerTag: "maiLiam",
-        mainCharacter: "Pokemon Trainer",
+        mainCharacter: "pokemon trainer",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "1765815",
         gamerTag: "Camden",
-        mainCharacter: "Shulk",
-        secondaryCharacter: "Kirby",
+        mainCharacter: "shulk",
+        secondaryCharacter: "kirby",
         region: "Iowa City"
     },
     {
         id: "1884088",
         gamerTag: "T8N",
-        mainCharacter: "King K. Rool",
+        mainCharacter: "king k. rool",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "1610333",
         gamerTag: "hiyourded",
-        mainCharacter: "King Dedede",
+        mainCharacter: "king dedede",
         secondaryCharacter: "None",
         region: "Pella"
     },
     {
         id: "1720138",
         gamerTag: "Phly",
-        mainCharacter: "Piranha Plant",
-        secondaryCharacter: "Incineroar",
+        mainCharacter: "piranha plant",
+        secondaryCharacter: "incineroar",
         region: "Ames"
     },
     {
         id: "2415591",
         gamerTag: "softlock",
-        mainCharacter: "Inkling",
+        mainCharacter: "inkling",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "2817502",
         gamerTag: "MrSinister",
-        mainCharacter: "Incineroar",
+        mainCharacter: "incineroar",
         secondaryCharacter: "None",
         region: "Pella"
     },
     {
         id: "3226575",
         gamerTag: "CallmeCorrin",
-        mainCharacter: "Byleth",
+        mainCharacter: "byleth",
         secondaryCharacter: "None",
         region: "Marshalltown"
     },
     {
         id: "1920764",
         gamerTag: "Manute Bollz",
-        mainCharacter: "Wolf",
+        mainCharacter: "wolf",
         secondaryCharacter: "None",
         region: "Cedar Falls"
     },
     {
         id: "845030",
         gamerTag: "pla5ma",
-        mainCharacter: "R.O.B.",
+        mainCharacter: "r.o.b.",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "2318677",
         gamerTag: "Rev_",
-        mainCharacter: "Fox",
+        mainCharacter: "fox",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "3107472",
         gamerTag: "Arjay",
-        mainCharacter: "Yoshi",
+        mainCharacter: "yoshi",
         secondaryCharacter: "None",
         region: "Marshalltown"
     },
     {
         id: "2284370",
         gamerTag: "AtomicK",
-        mainCharacter: "Diddy Kong",
+        mainCharacter: "diddy kong",
         secondaryCharacter: "None",
         region: "Des Moines"
     },
     {
         id: "860890",
         gamerTag: "Mizery",
-        mainCharacter: "Dr. Mario",
-        secondaryCharacter: "Sonic",
+        mainCharacter: "dr. mario",
+        secondaryCharacter: "sonic",
         region: "Des Moines"
     },
     {
         id: "44915",
         gamerTag: "WelfarePickles",
-        mainCharacter: "Snake",
+        mainCharacter: "snake",
         secondaryCharacter: "None",
         region: "Des Moines"
     },
     {
         id: "1939564",
         gamerTag: "Thomathy",
-        mainCharacter: "Terry",
-        secondaryCharacter: "Banjo & Kazooie",
+        mainCharacter: "terry",
+        secondaryCharacter: "banjo & kazooie",
         region: "Ames"
     },
     {
         id: "2798470",
         gamerTag: "Ace",
-        mainCharacter: "Mr. Game & Watch",
+        mainCharacter: "mr. game & watch",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "1722122",
         gamerTag: "keey",
-        mainCharacter: "Villager",
+        mainCharacter: "villager",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "1901670",
         gamerTag: "Miracle",
-        mainCharacter: "Pikachu",
+        mainCharacter: "pikachu",
         secondaryCharacter: "None",
         region: "Davenport"
     },
     {
         id: "2956966",
         gamerTag: "Heerio",
-        mainCharacter: "Hero",
+        mainCharacter: "hero",
         secondaryCharacter: "None",
         region: "Marshalltown"
     },
     {
         id: "2889647",
         gamerTag: "VaderTime",
-        mainCharacter: "Little Mac",
+        mainCharacter: "little mac",
         secondaryCharacter: "None",
         region: "Marshalltown"
     },
     {
         id: "3051918",
         gamerTag: "Rain",
-        mainCharacter: "Bowser Jr.",
+        mainCharacter: "bowser jr.",
         secondaryCharacter: "None",
         region: "Cedar Rapids"
     },
     {
         id: "2562021",
         gamerTag: "Shadowbolt",
-        mainCharacter: "Pikachu",
+        mainCharacter: "pikachu",
         secondaryCharacter: "None",
         region: "Marshalltown"
     },
     {
         id: "1171770",
         gamerTag: "Bugz",
-        mainCharacter: "Luigi",
-        secondaryCharacter: "Sonic",
+        mainCharacter: "luigi",
+        secondaryCharacter: "sonic",
         region: "Cedar Falls"
     },
     {
         id: "564242",
         gamerTag: "Piklechips",
-        mainCharacter: "Bayonetta",
-        secondaryCharacter: "Pokemon Trainer",
+        mainCharacter: "bayonetta",
+        secondaryCharacter: "pokemon trainer",
         region: "Des Moines"
     },
     {
         id: "2087072",
         gamerTag: "Timmer",
-        mainCharacter: "MewTwo",
+        mainCharacter: "mewtwo",
         secondaryCharacter: "None",
         region: "Des Moines"
     },
     {
         id: "1033858",
         gamerTag: "PeZ",
-        mainCharacter: "Fox",
-        secondaryCharacter: "Captain Falcon",
+        mainCharacter: "fox",
+        secondaryCharacter: "captain falcon",
         region: "Des Moines"
     },
     {
         id: "1048513",
         gamerTag: "Izzt",
-        mainCharacter: "Pac-Man",
-        secondaryCharacter: "Shiek",
+        mainCharacter: "pac man",
+        secondaryCharacter: "sheik",
         region: "Des Moines"
     },
     {
         id: "2034468",
         gamerTag: "Meta-Main",
-        mainCharacter: "Meta Knight",
+        mainCharacter: "meta knight",
         secondaryCharacter: "None",
         region: "Cedar Rapids"
     },
     {
         id: "3654921",
         gamerTag: "Furinji",
-        mainCharacter: "Banjo & Kazooie",
+        mainCharacter: "banjo & kazooie",
         secondaryCharacter: "None",
         region: "Pella"
     },
     {
         id: "1023797",
         gamerTag: "SCRUB ANNIHILATOR",
-        mainCharacter: "Cloud",
-        secondaryCharacter: "Joker",
+        mainCharacter: "cloud",
+        secondaryCharacter: "joker",
         region: "Des Moines"
     },
     {
         id: "126232",
         gamerTag: "Gunla",
-        mainCharacter: "Palutena",
-        secondaryCharacter: "Ridley",
+        mainCharacter: "palutena",
+        secondaryCharacter: "ridley",
         region: "Des Moines"
     },
     {
         id: "2283997",
         gamerTag: "B1R",
-        mainCharacter: "Bowser Jr.",
+        mainCharacter: "bowser jr.",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "2930930",
         gamerTag: "BigDiscGolfGuy",
-        mainCharacter: "Bowser",
+        mainCharacter: "bowser",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "824204",
         gamerTag: "Ensemble",
-        mainCharacter: "Lucina",
-        secondaryCharacter: "Marth",
+        mainCharacter: "lucina",
+        secondaryCharacter: "marth",
         region: "Cedar Rapids"
     },
     {
         id: "2872418",
         gamerTag: "Arctursus",
-        mainCharacter: "Captain Falcon",
+        mainCharacter: "captain falcon",
         secondaryCharacter: "None",
         region: "Marshalltown"
     },
     {
         id: "2574672",
         gamerTag: "G0rb",
-        mainCharacter: "Robin",
-        secondaryCharacter: "Jigglypuff",
+        mainCharacter: "robin",
+        secondaryCharacter: "jigglypuff",
         region: "Dubuque"
     },
     {
         id: "414018",
         gamerTag: "Stiggy",
-        mainCharacter: "Young Link",
+        mainCharacter: "young link",
         secondaryCharacter: "None",
         region: "Dubuque"
     },
     {
         id: "2409957",
         gamerTag: "CatBoy",
-        mainCharacter: "Sephiroth",
+        mainCharacter: "sephiroth",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "3463839",
         gamerTag: "KGB",
-        mainCharacter: "Piranha Plant",
+        mainCharacter: "piranha plant",
         secondaryCharacter: "None",
         region: "Cedar Falls"
     },
     {
         id: "37179",
         gamerTag: "Phoenix",
-        mainCharacter: "Yoshi",
+        mainCharacter: "yoshi",
         secondaryCharacter: "None",
         region: "Davenport"
     },
     {
         id: "1168691",
         gamerTag: "Bugacheen",
-        mainCharacter: "Wii Fit Trainer",
+        mainCharacter: "wii fit trainer",
         secondaryCharacter: "None",
         region: "Davenport"
     },
     {
         id: "1821110",
         gamerTag: "TrueShenanigans",
-        mainCharacter: "Duck Hunt",
-        secondaryCharacter: "Banjo & Kazooie",
+        mainCharacter: "duck hunt",
+        secondaryCharacter: "banjo & kazooie",
         region: "Dubuque"
     },
     {
         id: "855544",
         gamerTag: "gabo.",
-        mainCharacter: "Luigi",
-        secondaryCharacter: "Richter",
+        mainCharacter: "luigi",
+        secondaryCharacter: "richter",
         region: "Des Moines"
     },
     {
         id: "3006098",
         gamerTag: "Bollz",
-        mainCharacter: "Luigi",
+        mainCharacter: "luigi",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "2998643",
         gamerTag: "FlarbaDoodle",
-        mainCharacter: "Ridley",
+        mainCharacter: "ridley",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "1253437",
         gamerTag: "JAYKOB",
-        mainCharacter: "Shulk",
-        secondaryCharacter: "Yoshi",
+        mainCharacter: "shulk",
+        secondaryCharacter: "yoshi",
         region: "Des Moines"
     },
     {
         id: "3264434",
         gamerTag: "pvn",
-        mainCharacter: "Joker",
-        secondaryCharacter: "Chrom",
+        mainCharacter: "joker",
+        secondaryCharacter: "chrom",
         region: "Ames"
     },
     {
         id: "1692259",
         gamerTag: "Champion Link",
-        mainCharacter: "Joker",
-        secondaryCharacter: "Mario",
+        mainCharacter: "joker",
+        secondaryCharacter: "mario",
         region: "Ames"
     },
     {
         id: "2862864",
         gamerTag: "Joely",
-        mainCharacter: "Byleth",
+        mainCharacter: "byleth",
         secondaryCharacter: "None",
         region: "Davenport"
     },
     {
         id: "15806",
         gamerTag: "Dysfunktional",
-        mainCharacter: "Daisy",
-        secondaryCharacter: "Jigglypuff",
+        mainCharacter: "daisy",
+        secondaryCharacter: "jigglypuff",
         region: "Davenport"
     },
     {
         id: "2477329",
         gamerTag: "Otis",
-        mainCharacter: "Cloud",
+        mainCharacter: "cloud",
         secondaryCharacter: "None",
         region: "Iowa City"
     },
     {
         id: "1451490",
         gamerTag: "EVEREST",
-        mainCharacter: "Zero Suit Samus",
-        secondaryCharacter: "Pokemon Trainer",
+        mainCharacter: "zero suit samus",
+        secondaryCharacter: "pokemon trainer",
         region: "Iowa City"
     },
 
     {
         id: "3228133",
         gamerTag: "WILL-IT-BEND",
-        mainCharacter: "Donkey Kong",
+        mainCharacter: "donkey kong",
         secondaryCharacter: "None",
         region: "Cedar Rapids"
     },
     {
         id: "1451176",
         gamerTag: "Grantmaster",
-        mainCharacter: "Ryu",
-        secondaryCharacter: "MewTwo",
+        mainCharacter: "ryu",
+        secondaryCharacter: "mewtwo",
         region: "Ames"
     },
     {
         id: "2426494",
         gamerTag: "Sandman",
-        mainCharacter: "Captain Falcon",
+        mainCharacter: "captain falcon",
         secondaryCharacter: "None",
         region: "Cedar Falls"
     },
     {
         id: "2468022",
         gamerTag: "GothGirlsPls",
-        mainCharacter: "Steve",
+        mainCharacter: "steve",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "2477330",
         gamerTag: "Yote",
-        mainCharacter: "Aegis",
+        mainCharacter: "aegis",
         secondaryCharacter: "None",
         region: "Iowa City"
     },
     {
         id: "1646119",
         gamerTag: "Minecraft Mattt 2",
-        mainCharacter: "King Dedede",
-        secondaryCharacter: "Bowser",
+        mainCharacter: "king dedede",
+        secondaryCharacter: "bowser",
         region: "Iowa City"
     },
     {
         id: "3020037",
         gamerTag: "MEDBi",
-        mainCharacter: "Ken",
-        secondaryCharacter: "Ryu",
+        mainCharacter: "ken",
+        secondaryCharacter: "ryu",
         region: "Ames"
     },
     {
         id: "2998382",
         gamerTag: "NIX",
-        mainCharacter: "Wario",
+        mainCharacter: "wario",
         secondaryCharacter: "None",
         region: "Davenport"
     },
     {
         id: "2918150", gamerTag: 'Mr. Gerudo',
-        mainCharacter: "Ganondorf",
+        mainCharacter: "ganondorf",
         secondaryCharacter: "None",
         region: "Ames"
     },
     {
         id: "1972356", gamerTag: 'Wack',
-        mainCharacter: "Zero Suit Samus",
+        mainCharacter: "zero suit samus",
         secondaryCharacter: "None",
         region: "Cedar Falls"
     },
     {
         id: "1793383", gamerTag: 'GBA 049',
-        mainCharacter: "Ridley",
+        mainCharacter: "ridley",
         secondaryCharacter: "None",
         region: "Marshalltown"
     },
     {
         id: "2708584", gamerTag: 'Beamer',
-        mainCharacter: "Peach",
-        secondaryCharacter: "Donkey Kong",
+        mainCharacter: "peach",
+        secondaryCharacter: "donkey kong",
         region: "Cedar Falls"
     },
     {
         id: "1001489", gamerTag: 'KyokaMSK',
-        mainCharacter: "Banjo & Kazooie",
+        mainCharacter: "banjo & kazooie",
         secondaryCharacter: "None",
         region: "Davenport"
     },
     {
         id: "285939", gamerTag: 'Trejohn6',
-        mainCharacter: "Toon Link",
+        mainCharacter: "toon link",
         secondaryCharacter: "None",
         region: "Des Moines"
     },
     {
         id: "2067388", gamerTag: 'Derkquake',
-        mainCharacter: "Duck Hunt",
-        secondaryCharacter: "Snake",
+        mainCharacter: "duck hunt",
+        secondaryCharacter: "snake",
         region: "Ames"
     },
     {
         id: "3119726", gamerTag: 'Night',
-        mainCharacter: "Wolf",
+        mainCharacter: "wolf",
         secondaryCharacter: "None",
         region: "Cedar Rapids"
     },
     {
         id: "1280334", gamerTag: 'Veecy',
-        mainCharacter: "Samus",
-        secondaryCharacter: "Steve",
+        mainCharacter: "samus",
+        secondaryCharacter: "steve",
         region: "Ames"
     },
     {
         id: "585302", gamerTag: 'AlbyFRESH',
-        mainCharacter: "Byleth",
-        secondaryCharacter: "Joker",
+        mainCharacter: "byleth",
+        secondaryCharacter: "joker",
         region: "Davenport"
     },
     {
         id: "2188599", gamerTag: 'Dirty Dan',
-        mainCharacter: "Ridley",
-        secondaryCharacter: "Game & Watch",
+        mainCharacter: "ridley",
+        secondaryCharacter: "mr. game & watch",
         region: "Des Moines"
     },
     {
         id: "1848611", gamerTag: 'Algae',
-        mainCharacter: "Diddy Kong",
+        mainCharacter: "diddy kong",
         secondaryCharacter: "None",
         region: "Iowa City"
     }

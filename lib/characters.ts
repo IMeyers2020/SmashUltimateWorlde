@@ -395,7 +395,7 @@ export const CharacterList = [
         ]
     },
     {
-        "name": "squirtle (pokémon trainer)",
+        "name": "pokemon trainer",
         "id": "33",
         "series": "pokémon",
         "first-game": "brawl",
@@ -403,30 +403,6 @@ export const CharacterList = [
         "aliases":[
             "pokémon trainer",
             "pt"
-        ]
-    },
-    {
-        "name": "ivysaur (pokémon trainer)",
-        "id": "34",
-        "series": "pokémon",
-        "first-game": "brawl",
-        "asset": "https://www.smashbros.com/assets_v2/img/fighter/pokemon_trainer/main.png",
-        "aliases":[
-            "pokémon trainer",
-            "pt",
-            "ivy"
-        ]
-    },
-    {
-        "name": "charizard (pokémon trainer)",
-        "id": "35",
-        "series": "pokémon",
-        "first-game": "brawl",
-        "asset": "https://www.smashbros.com/assets_v2/img/fighter/pokemon_trainer/main.png",
-        "aliases":[
-            "pokémon trainer",
-            "pt",
-            "zard"
         ]
     },
     {
@@ -893,7 +869,7 @@ export const CharacterList = [
         ]
     },
     {
-        "name": "steve / alex",
+        "name": "steve",
         "id": "77",
         "series": "minecraft",
         "first-game": "ultimate",
@@ -916,19 +892,8 @@ export const CharacterList = [
         ]
     },
     {
-        "name": "pyra",
+        "name": "aegis",
         "id": "79",
-        "series": "xenoblade chronicles",
-        "first-game": "ultimate",
-        "asset": "https://www.smashbros.com/assets_v2/img/fighter/pyra/main.png",
-        "aliases":[
-            "pythra",
-            "aegis"
-        ]
-    },
-    {
-        "name": "mythra",
-        "id": "80",
         "series": "xenoblade chronicles",
         "first-game": "ultimate",
         "asset": "https://www.smashbros.com/assets_v2/img/fighter/pyra/main.png",
@@ -957,4 +922,4 @@ export const CharacterList = [
             
         ]
     }
-]
+] as const

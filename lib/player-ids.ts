@@ -1,4 +1,4 @@
-export const PlayerIds: number[] = [
+export const PlayerIds = [
     3010205,
     1665644,
     1533290,
@@ -131,4 +131,4 @@ export const PlayerIds: number[] = [
     1995528,
     2250605,
     1848611,
-]
+] as const
