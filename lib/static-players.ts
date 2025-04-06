@@ -140,7 +140,7 @@ export const PlayerStaticValues: StaticPlayerProps[] =
         gamerTag: "Arjay",
         mainCharacter: "yoshi",
         secondaryCharacter: "None",
-        region: "Marshalltown"
+        region: "Cedar Rapids"
     },
     {
         id: "2284370",
@@ -182,7 +182,7 @@ export const PlayerStaticValues: StaticPlayerProps[] =
         gamerTag: "keey",
         mainCharacter: "villager",
         secondaryCharacter: "None",
-        region: "Ames"
+        region: "Des Moines"
     },
     {
         id: "1901670",
@@ -291,7 +291,7 @@ export const PlayerStaticValues: StaticPlayerProps[] =
     },
     {
         id: "2930930",
-        gamerTag: "BigDiscGolfGuy",
+        gamerTag: "SpahrStar",
         mainCharacter: "bowser",
         secondaryCharacter: "None",
         region: "Ames"
@@ -449,7 +449,7 @@ export const PlayerStaticValues: StaticPlayerProps[] =
         gamerTag: "Sandman",
         mainCharacter: "captain falcon",
         secondaryCharacter: "None",
-        region: "Cedar Falls"
+        region: "Des Moines"
     },
     {
         id: "2468022",
@@ -485,12 +485,6 @@ export const PlayerStaticValues: StaticPlayerProps[] =
         mainCharacter: "wario",
         secondaryCharacter: "None",
         region: "Davenport"
-    },
-    {
-        id: "2918150", gamerTag: 'Mr. Gerudo',
-        mainCharacter: "ganondorf",
-        secondaryCharacter: "None",
-        region: "Ames"
     },
     {
         id: "1972356", gamerTag: 'Wack',
@@ -556,6 +550,48 @@ export const PlayerStaticValues: StaticPlayerProps[] =
         id: "1848611", gamerTag: 'Algae',
         mainCharacter: "diddy kong",
         secondaryCharacter: "None",
+        region: "Iowa City"
+    },
+    {
+        id: "3254102", gamerTag: 'Alchemist',
+        mainCharacter: "wii fit trainer",
+        secondaryCharacter: "None",
+        region: "Ames"
+    },
+    {
+        id: "3391683", gamerTag: 'PokeGod317',
+        mainCharacter: "pikachu",
+        secondaryCharacter: "None",
+        region: "Marshalltown"
+    },
+    {
+        id: "3190810", gamerTag: 'TwoMan',
+        mainCharacter: "sonic",
+        secondaryCharacter: "None",
+        region: "Cedar Falls"
+    },
+    {
+        id: "4642251", gamerTag: 'Rikukhmickey',
+        mainCharacter: "sora",
+        secondaryCharacter: "None",
+        region: "Cedar Falls"
+    },
+    {
+        id: "3760118", gamerTag: 'Nimbus',
+        mainCharacter: "cloud",
+        secondaryCharacter: "None",
+        region: "Ames"
+    },
+    {
+        id: "3026371", gamerTag: 'JoSePh',
+        mainCharacter: "luigi",
+        secondaryCharacter: "joker",
+        region: "Ames"
+    },
+    {
+        id: "1735773", gamerTag: 'OriMan',
+        mainCharacter: "ken",
+        secondaryCharacter: "mii swordfighter",
         region: "Iowa City"
     }
 ]
