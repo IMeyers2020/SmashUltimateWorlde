@@ -505,12 +505,6 @@ export const PlayerStaticValues: StaticPlayerProps[] =
         region: "Cedar Falls"
     },
     {
-        id: "1001489", gamerTag: 'KyokaMSK',
-        mainCharacter: "banjo & kazooie",
-        secondaryCharacter: "None",
-        region: "Davenport"
-    },
-    {
         id: "285939", gamerTag: 'Trejohn6',
         mainCharacter: "toon link",
         secondaryCharacter: "None",
