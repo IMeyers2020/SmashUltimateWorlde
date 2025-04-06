@@ -571,12 +571,6 @@ export const PlayerStaticValues: StaticPlayerProps[] =
         region: "Cedar Falls"
     },
     {
-        id: "4642251", gamerTag: 'Rikukhmickey',
-        mainCharacter: "sora",
-        secondaryCharacter: "None",
-        region: "Cedar Falls"
-    },
-    {
         id: "3760118", gamerTag: 'Nimbus',
         mainCharacter: "cloud",
         secondaryCharacter: "None",
