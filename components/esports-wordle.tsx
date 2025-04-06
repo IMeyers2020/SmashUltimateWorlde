@@ -28,6 +28,7 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
   }
 
   useEffect(() => {
+    setGuesses(JSON.parse(localStorage.getItem("guessItems") ?? "[]") ?? [])
     const reloadAtNewDay = () => {
       const now = new Date();
       const midnight = new Date();
@@ -47,6 +48,26 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
 
     return () => clearTimeout(timeoutId);
   }, []);
+
+  useEffect(() => {
+    if (guesses.find(x => x.id === dailyPlayer.id)) {
+      setGameWon(true)
+      toast({
+        title: "Congratulations!",
+        description: `You guessed correctly! The player was ${dailyPlayer.gamerTag}.`,
+        variant: "default",
+      })
+    } else
+    {
+      if(guesses.length >= 8) {
+        toast({
+          title: "Game Over",
+          description: `You've used all your guesses. The player was ${dailyPlayer.gamerTag}.`,
+          variant: "destructive",
+        })
+      }
+    }
+  }, [guesses])
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -140,6 +161,7 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
     const newGuesses = [...guesses, completePlayer]
     setGuesses(newGuesses)
     setGuessInput("")
+    localStorage.setItem("guessItems", JSON.stringify(newGuesses));
 
     // Check if the guess is correct
     if (completePlayer.id === dailyPlayer.id) {
