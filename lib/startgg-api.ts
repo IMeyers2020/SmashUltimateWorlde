@@ -49,6 +49,7 @@ const GET_RECENT_SET_PLAYERS = gql`
               total
             }
           }
+          name
           sets(filters:{hideEmpty:true, showByes:false}) {
             pageInfo{
               total
@@ -60,6 +61,7 @@ const GET_RECENT_SET_PLAYERS = gql`
                   seedNum
                 }
                 entrant {
+                  id
                   name
                 }
               }
@@ -264,7 +266,7 @@ export async function fetchBiggestUpset(): Promise<{ winningPlayer: string, losi
     }
   })
 
-  const events = data?.tournaments.nodes.filter(x => Boolean(x.events)).map(t => ({events: t.events[0], name: t.name})).filter(x => Boolean(x.events) && Boolean(x.name))
+  const events = data?.tournaments.nodes.filter(x => Boolean(x.events) && x.events.length > 0).map(t => ({events: t.events.find(t2 => t2?.name?.toLowerCase()?.includes("singles")) ?? t.events[0], name: t.name})).filter(x => Boolean(x.events) && Boolean(x.name))
 
   events.forEach(e => {
     const entrantNum = e.events?.entrants?.pageInfo?.total ?? 0;
@@ -272,11 +274,11 @@ export async function fetchBiggestUpset(): Promise<{ winningPlayer: string, losi
 
     if(entrantNum > 0) {
       e.events.sets?.nodes?.forEach(n => {
-        const p1: {seed: number, tag: string} = { seed: n.slots[0].seed.seedNum, tag: n.slots[0].entrant.name}
-        const p2: {seed: number, tag: string} = { seed: n.slots[1].seed.seedNum, tag: n.slots[1].entrant.name}
+        const p1: {seed: number, tag: string, id: number} = { seed: n.slots[0].seed.seedNum, tag: n.slots[0].entrant.name, id: n.slots[0].entrant.id}
+        const p2: {seed: number, tag: string, id: number} = { seed: n.slots[1].seed.seedNum, tag: n.slots[1].entrant.name, id: n.slots[1].entrant.id}
 
-        const winner = n.tag === p1.tag ? p1 : p2;
-        const loser = n.tag === p1.tag ? p2 : p1;
+        const winner = n.winnerId === p1.id ? p1 : p2;
+        const loser = n.winnerId === p1.id ? p2 : p1;
 
         if(winner.seed > loser.seed) {
           allSets.push({upsetVal: (winner.seed - loser.seed) * (0.1 * entrantNum), winningPlayerTag: winner.tag, losingPlayerTag: loser.tag, winningPlayerSeed: winner.seed, losingPlayerSeed: loser.seed, tourneyName: tName})

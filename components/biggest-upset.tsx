@@ -30,22 +30,22 @@ export default function BiggestUpset() {
                     <CardTitle className="text-2xl">Biggest Upset of the Week</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex flex-col md:flex-row items-center gap-6">
-                    <div className="flex flex-1 items-center justify-center gap-4">
-                        <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center gap-6">
+                        <div className="flex flex-1 items-center justify-center gap-4">
+                            <div className="flex flex-col items-center">
 
-                        <p className="font-bold mt-2">{biggestUpset.winningPlayerName}</p>
-                        <p className="text-sm text-muted-foreground">Seed #{biggestUpset.winningPlayerSeed}</p>
+                            <p className="font-bold mt-2">{biggestUpset.winningPlayerName}</p>
+                            <p className="text-sm text-muted-foreground">Seed #{biggestUpset.winningPlayerSeed}</p>
+                            </div>
+                            <div className="text-2xl font-bold">{">"}</div>
+                            <div className="flex flex-col items-center">
+                            <p className="font-bold mt-2">{biggestUpset.losingPlayerName}</p>
+                            <p className="text-sm text-muted-foreground">Seed #{biggestUpset.losingPlayerSeed}</p>
+                            </div>
                         </div>
-                        <div className="text-2xl font-bold">vs</div>
-                        <div className="flex flex-col items-center">
-                        <p className="font-bold mt-2">{biggestUpset.losingPlayerName}</p>
-                        <p className="text-sm text-muted-foreground">Seed #{biggestUpset.losingPlayerSeed}</p>
+                        <div className="flex-1">
+                            <p className="text-muted-foreground"><strong>{`At ${biggestUpset.bracketName}`}</strong></p>
                         </div>
-                    </div>
-                    <div className="flex-1">
-                        <p className="text-muted-foreground"><strong>{`At ${biggestUpset.bracketName}`}</strong></p>
-                    </div>
                     </div>
                 </CardContent>
             </Card>
