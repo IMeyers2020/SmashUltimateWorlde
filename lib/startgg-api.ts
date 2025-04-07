@@ -27,6 +27,51 @@ const GET_PLAYER_BY_ID_QUERY = gql`
   }
 `
 
+const GET_RECENT_SET_PLAYERS = gql`
+  query RecentEvents($after: Timestamp) {
+    tournaments(query: {
+      filter: {
+        addrState: "IA",
+        afterDate: $after,
+        past:true
+      }
+    }) {
+      pageInfo {
+        total
+        totalPages
+      }
+      nodes {
+        id
+        name
+        events(filter: {videogameId: 1386}) {
+          entrants{
+            pageInfo {
+              total
+            }
+          }
+          sets(filters:{hideEmpty:true, showByes:false}) {
+            pageInfo{
+              total
+              totalPages
+            },
+            nodes{
+              slots(includeByes: false) {
+                seed {
+                  seedNum
+                }
+                entrant {
+                  name
+                }
+              }
+              winnerId
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 const GET_SETS_PLAYER = gql`
   query GetPlayerSets($id: ID!) {
     player(id: $id) {
@@ -199,6 +244,60 @@ export async function getMainSecondaryFromDict(dict: Record<string, number>): Pr
     main: returnMain,
     secondary: returnSecondary
   };
+}
+
+export async function fetchBiggestUpset(): Promise<{ winningPlayer: string, losingPlayer: string, winningPlayerSeed: number | null, losingPlayerSeed: number | null, bracketName: string }> {
+  const client = getServerApolloClient()
+  const allSets: { winningPlayerTag: string, losingPlayerTag: string, upsetVal: number, winningPlayerSeed: number, losingPlayerSeed: number, tourneyName: string}[] = [];
+  
+  const { data } = await client.query({
+    query: GET_RECENT_SET_PLAYERS,
+    variables: { 
+      after: Math.floor(DateTime.now().minus({days: 5}).toSeconds())
+    },
+    notifyOnNetworkStatusChange: true,
+    errorPolicy: "all", // Return partial data even if there are errors
+    context: {
+      fetchOptions: {
+        timeout: 10000, // 10 seconds timeout
+      },
+    }
+  })
+
+  const events = data?.tournaments.nodes.filter(x => Boolean(x.events)).map(t => ({events: t.events[0], name: t.name})).filter(x => Boolean(x.events) && Boolean(x.name))
+
+  events.forEach(e => {
+    const entrantNum = e.events?.entrants?.pageInfo?.total ?? 0;
+    const tName = e.name
+
+    if(entrantNum > 0) {
+      e.events.sets?.nodes?.forEach(n => {
+        const p1: {seed: number, tag: string} = { seed: n.slots[0].seed.seedNum, tag: n.slots[0].entrant.name}
+        const p2: {seed: number, tag: string} = { seed: n.slots[1].seed.seedNum, tag: n.slots[1].entrant.name}
+
+        const winner = n.tag === p1.tag ? p1 : p2;
+        const loser = n.tag === p1.tag ? p2 : p1;
+
+        if(winner.seed > loser.seed) {
+          allSets.push({upsetVal: (winner.seed - loser.seed) * (0.1 * entrantNum), winningPlayerTag: winner.tag, losingPlayerTag: loser.tag, winningPlayerSeed: winner.seed, losingPlayerSeed: loser.seed, tourneyName: tName})
+        }
+      })
+    }
+  })
+
+  const returnVal = allSets.sort((a, b) => {
+    if (a.upsetVal > b.upsetVal) return -1;
+    if (b.upsetVal > a.upsetVal) return 1;
+    return 0;
+  })[0]
+
+  return {
+    winningPlayer: returnVal?.winningPlayerTag,
+    losingPlayer: returnVal?.losingPlayerTag,
+    winningPlayerSeed: returnVal?.winningPlayerSeed ?? null,
+    losingPlayerSeed: returnVal?.losingPlayerSeed ?? null,
+    bracketName: returnVal.tourneyName
+  }
 }
 
 export async function getMainAndSecondaryForPlayer(id: number): Promise<{main: string, secondary: string} | null> {

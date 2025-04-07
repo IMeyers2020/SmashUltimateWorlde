@@ -1,6 +1,7 @@
 import { Suspense } from "react"
 import { ApolloClientProvider } from "@/lib/apollo-provider"
 import "./globals.css"
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 
 export const metadata = {
   title: "Iowa Smash Ultimate Wordle",
@@ -12,6 +13,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  loadErrorMessages()
+  loadDevMessages()
   return (
     <html lang="en">
       <body className="min-h-screen bg-background">
