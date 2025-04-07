@@ -31,16 +31,15 @@ export default function BiggestUpset() {
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-col items-center gap-6">
-                        <div className="flex flex-1 items-center justify-center gap-4">
-                            <div className="flex flex-col items-center">
-
-                            <p className="font-bold mt-2">{biggestUpset.winningPlayerName}</p>
-                            <p className="text-sm text-muted-foreground">Seed #{biggestUpset.winningPlayerSeed}</p>
+                        <div className="flex flex-col sm:flex-row flex-1 items-center justify-center gap-4">
+                            <div className="flex flex-col items-center rounded bg-green-100 px-2 py-1">
+                                <p className="font-bold mt-2">{biggestUpset.winningPlayerName}</p>
+                                <p className="text-sm text-muted-foreground">Seed #{biggestUpset.winningPlayerSeed}</p>
                             </div>
                             <div className="text-2xl font-bold">{">"}</div>
-                            <div className="flex flex-col items-center">
-                            <p className="font-bold mt-2">{biggestUpset.losingPlayerName}</p>
-                            <p className="text-sm text-muted-foreground">Seed #{biggestUpset.losingPlayerSeed}</p>
+                            <div className="flex flex-col items-center rounded bg-red-100 px-2 py-1">
+                                <p className="font-bold mt-2">{biggestUpset.losingPlayerName}</p>
+                                <p className="text-sm text-muted-foreground">Seed #{biggestUpset.losingPlayerSeed}</p>
                             </div>
                         </div>
                         <div className="flex-1">
