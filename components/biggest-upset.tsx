@@ -25,10 +25,11 @@ export default function BiggestUpset() {
 
     return (
         <div className="w-full max-w-2xl mx-auto">
-            <Card className="w-full mt-8">
+            <Card className="w-full mt-8 text-slate-600 border">
                 <CardHeader>
-                    <CardTitle className="text-2xl">Biggest Upset of the Week</CardTitle>
+                    <CardTitle className="text-2xl text-center">Biggest Upset of the Week</CardTitle>
                 </CardHeader>
+                <hr className="mb-5 text-slate-600" />
                 <CardContent>
                     <div className="flex flex-col items-center gap-6">
                         <div className="flex flex-col sm:flex-row flex-1 items-center justify-center gap-4">
