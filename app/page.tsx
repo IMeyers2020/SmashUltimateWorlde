@@ -28,7 +28,7 @@ export default function HomePage() {
         <div className="flex flex-col gap-4 mt-8 max-w-md">
           <BiggestUpset></BiggestUpset>
 
-          <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full max-w-md">
+          <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full">
             <Link target="_blank" className="hover:bg-slate-500 hover:text-white text-slate-600 border rounded-lg cursor-pointer" href="https://discord.gg/eDKrEYk9de">
               <Button size="lg" className="flex-1 gap-2 cursor-pointer">
                 <MessageSquare className="h-5 w-5" />
