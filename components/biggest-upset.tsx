@@ -27,7 +27,7 @@ export default function BiggestUpset() {
         <div className="w-full max-w-2xl mx-auto">
             <Card className="w-full mt-8 text-slate-600 border">
                 <CardHeader>
-                    <CardTitle className="text-2xl text-center">Biggest Upset of the Week</CardTitle>
+                    <CardTitle className="text-2xl text-center">Upset of the Week</CardTitle>
                 </CardHeader>
                 <hr className="mb-5 text-slate-600" />
                 <CardContent>
