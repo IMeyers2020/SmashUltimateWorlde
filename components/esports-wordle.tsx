@@ -28,7 +28,14 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
   }
 
   useEffect(() => {
-    setGuesses(JSON.parse(localStorage.getItem("guessItems") ?? "[]") ?? [])
+    const cachedGuesses = localStorage.getItem("guessItems");
+    const parsedCachedGuesses = JSON.parse(cachedGuesses ?? "{}")
+
+    if(parsedCachedGuesses && !Array.isArray(parsedCachedGuesses) && parsedCachedGuesses.timestamp && parsedCachedGuesses.guesses) {
+      if(DateTime.fromISO(parsedCachedGuesses.timestamp) > DateTime.now().startOf('day')) {
+        setGuesses(parsedCachedGuesses.guesses)
+      }
+    }
     const reloadAtNewDay = () => {
       const now = new Date();
       const midnight = new Date();
@@ -161,7 +168,11 @@ export default function EsportsWordle({ dailyPlayer }: { dailyPlayer: Player }) 
     const newGuesses = [...guesses, completePlayer]
     setGuesses(newGuesses)
     setGuessInput("")
-    localStorage.setItem("guessItems", JSON.stringify(newGuesses));
+    const guessDTO = {
+      guesses: newGuesses,
+      timestamp: DateTime.now().toISO()
+    }
+    localStorage.setItem("guessItems", JSON.stringify(guessDTO));
 
     // Check if the guess is correct
     if (completePlayer.id === dailyPlayer.id) {
