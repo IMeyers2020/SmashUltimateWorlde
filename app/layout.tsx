@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { ApolloClientProvider } from "@/lib/apollo-provider"
 import "./globals.css"
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = {
   title: "Iowa Smash Ultimate Wordle",
@@ -21,6 +22,7 @@ export default function RootLayout({
         <ApolloClientProvider>
           <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
             {children}
+            <Analytics />
           </Suspense>
         </ApolloClientProvider>
       </body>
