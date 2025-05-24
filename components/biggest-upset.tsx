@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import { fetchBiggestUpset } from "@/lib/startgg-api";
-import { Player } from "@/lib/types";
 
 
 export default function BiggestUpset() {
