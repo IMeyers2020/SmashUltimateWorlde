@@ -280,7 +280,7 @@ export async function fetchBiggestUpset(): Promise<{ winningPlayer: string, losi
         const winner = n.winnerId === p1.id ? p1 : p2;
         const loser = n.winnerId === p1.id ? p2 : p1;
 
-        if(Boolean(winner.seed) && Boolean(loser.seed) && winner.seed > loser.seed) {
+        if(winner?.seed !== undefined && loser?.seed !== undefined && winner.seed > loser.seed) {
           allSets.push({upsetVal: (winner.seed - loser.seed) * (0.1 * entrantNum), winningPlayerTag: winner.tag, losingPlayerTag: loser.tag, winningPlayerSeed: winner.seed, losingPlayerSeed: loser.seed, tourneyName: tName})
         }
       })
