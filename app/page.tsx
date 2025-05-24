@@ -3,27 +3,12 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Twitter, MessageSquare } from "lucide-react"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "./api/auth/[...nextauth]/route"
 
-export default function HomePage() {
-  // Mock data for biggest upset
-  const biggestUpset = {
-    title: "Cloud9 Defeats T1 in Stunning Reverse Sweep",
-    description:
-      "In an unexpected turn of events, Cloud9 managed to reverse sweep tournament favorites T1 in the quarterfinals, coming back from an 0-2 deficit to win 3-2.",
-    date: "April 15, 2024",
-    teams: {
-      winner: {
-        name: "Cloud9",
-        seed: 8,
-        logo: "/placeholder.svg?height=80&width=80",
-      },
-      loser: {
-        name: "T1",
-        seed: 1,
-        logo: "/placeholder.svg?height=80&width=80",
-      },
-    },
-  }
+export default async function HomePage() {
+  const session = await getServerSession(authOptions)
+  const isAuthenticated = !!session
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-6 md:p-12">
